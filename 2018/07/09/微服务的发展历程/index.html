@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说说历史&amp;ensp; &amp;ensp;我初出茅庐时，是JavaEE各种技术标准，与java框架百花争鸣的时代，那时JCP还主导着java的各项规范与标准落地，第三方开源框架如雨后春笋般展露出来，其中最显著的是各种MVC框架，数量之多可以和今天的RPC服务框架相比，Spring 框架此时也登场了。据说，Spring 作者参加Java组织的技术交流时，受到了当时官方的藐视，于是下定决心，靠自己的实践来解决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务的发展历程">
+<meta property="og:url" content="https://wewld.com/2018/07/09/微服务的发展历程/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="说说历史&amp;ensp; &amp;ensp;我初出茅庐时，是JavaEE各种技术标准，与java框架百花争鸣的时代，那时JCP还主导着java的各项规范与标准落地，第三方开源框架如雨后春笋般展露出来，其中最显著的是各种MVC框架，数量之多可以和今天的RPC服务框架相比，Spring 框架此时也登场了。据说，Spring 作者参加Java组织的技术交流时，受到了当时官方的藐视，于是下定决心，靠自己的实践来解决">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-10T22:52:08.334Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微服务的发展历程">
+<meta name="twitter:description" content="说说历史&amp;ensp; &amp;ensp;我初出茅庐时，是JavaEE各种技术标准，与java框架百花争鸣的时代，那时JCP还主导着java的各项规范与标准落地，第三方开源框架如雨后春笋般展露出来，其中最显著的是各种MVC框架，数量之多可以和今天的RPC服务框架相比，Spring 框架此时也登场了。据说，Spring 作者参加Java组织的技术交流时，受到了当时官方的藐视，于是下定决心，靠自己的实践来解决">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/07/09/微服务的发展历程/"/>
+
+
+
+
+
+  <title>微服务的发展历程 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/07/09/微服务的发展历程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微服务的发展历程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T18:07:00+08:00">
+                2018-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/micro/" itemprop="url" rel="index">
+                    <span itemprop="name">micro</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="说说历史"><a href="#说说历史" class="headerlink" title="说说历史"></a>说说历史</h3><p>&ensp; &ensp;我初出茅庐时，是JavaEE各种技术标准，与java框架百花争鸣的时代，那时JCP还主导着java的各项规范与标准落地，第三方开源框架如雨后春笋般展露出来，其中最显著的是各种MVC框架，数量之多可以和今天的RPC服务框架相比，Spring 框架此时也登场了。据说，Spring 作者参加Java组织的技术交流时，受到了当时官方的藐视，于是下定决心，靠自己的实践来解决当时分布式开发的问题。<br>&ensp; &ensp;接下来，大家都知道了，这家伙写了3本书， j2ee design and development，j2ee development without EJB , Java development with Spring Freamework。从J2ee的实践，到痛点的吐槽与最佳实践的想法，到想法的落地。看这样的书，可以了解到分布式java要解决的一些问题，和怎样做是好的最佳实践。<br>&ensp; &ensp;java的发展不仅有官方的标准制定，还有类似Spring这样的第三方的贡献，第三方实现标准，提供开源且丰富的组件，这是她和别的语言最大的区别。今天她还活跃着，但是，她会以更加优雅的形态展示在我们面前。<br>&ensp; &ensp;也因为有互联网高速发展的需求，人们思想，工具与最佳实践的积累到了一定程度，就会发生阶段性的进步和变化。<br>&ensp; &ensp;微服务就是今天用来解决分布式软件开发，集成，可用性等问题的一种思路，方式和最佳实践。</p>
+<h3 id="再说微服务的历史"><a href="#再说微服务的历史" class="headerlink" title="再说微服务的历史"></a>再说微服务的历史</h3><pre><code>服务 : 远程接口，使用它们的数据和逻辑
+微 :  分解为更小、完全独立的组件
+</code></pre><p>下面，简单整理了一下微服务的发展历程，说到服务，就要从建立远程连接开始说起：</p>
+<table>
+<thead>
+<tr>
+<th>概念    ,关键词</th>
+<th>有关技术</th>
+<th>应用模式</th>
+<th>架构、思想    </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>连接世界</td>
+<td>TCP/IP , Http ， HTML</td>
+<td>Web服务器，静态资源</td>
+<td></td>
+</tr>
+<tr>
+<td>动态内容</td>
+<td>CGI , PHP ，ASP,  JSP</td>
+<td>Servlet(Struts,Webwork,JSF…) Socket BIO</td>
+<td>MVC </td>
+</tr>
+<tr>
+<td>分布式</td>
+<td>模型层：EJB ,Spring Freamwork<br> 持久化：hibernate,ibatis <br>J2EE标准：RMI,JMS, JPA…</td>
+<td>MVC + EJB<br>MVC + Spring + Hibernate<br>Spring remote proxy: HttpIClient,Hession ,Burlap</td>
+<td>分布式与多层架构</td>
+</tr>
+<tr>
+<td>面向服务<br>SAO, EAI</td>
+<td>ESB<br>MessageBroker,ActiveMQ<br>XML-RPC，WebService<br>其它：Restfull，MQ</td>
+<td>分布式应用 + ESB</td>
+<td>总线的应用集成<br>(退出历史舞台)</td>
+</tr>
+<tr>
+<td>服务治理<br>(使用服务框架)</td>
+<td>Netty(NIO)<br>服务框架  :  dubbo , motan,<br>thrift , grpc, Spring Cloud<br>服务注册发现，限流，<br>熔断降级，负载均衡<br>其它：HTTP2，<br>容器，应用编排</td>
+<td>服务架构<br>侵入式的服务治理<br>各种中间件产生与使用<br>容器，应用编排<br>云原生</td>
+<td>服务治理<br>服务去中心化<br>netty高性能<br>标准构建物容器<br>弹性伸缩，自愈<br>DEVOPS</td>
+</tr>
+<tr>
+<td>微服务（目前）</td>
+<td>java9 模块化(java的缺陷)<br>反应式流<br>Spring Cloud<br>Service Mesh<br>ServerLess</td>
+<td>SDK模式<br>SideCar模式<br>无服务模式</td>
+<td>+专注业务</td>
+</tr>
+</tbody>
+</table>
+<p>第一阶段，连接世界(拉网线)，制定通讯协议，数据交换格式开始。<br>第二阶段，人们不满足仅提供静态内容，创造了动态的内容的展示方式。<br>第三阶段，关注分布式软件的构建方式，和各种标准与技术的落地。<br>第四阶段，因为各种技术的使用和软件规模的增长，导致企业应用集成成为痛点。<br>第五阶段，服务框架和服务治理成为主流。DEVOPS，微服务，容器和编排成为可以落地的最佳实践。<br>第六阶段，简化透明智能，让人专注业务逻辑。  </p>
+<p>&ensp; &ensp;目前，假设我们处在微服务的阶段，在这个阶段开发人员还需要关注太多的服务治理相关的技术，服务的构建，应用的部署和监控，以及各种中间件的集成和应用要做的适应，这些痛点是在目前的阶段要解决的问题。<br>&ensp; &ensp;我们也看到，这个阶段的技术标准中，不仅有官方和传统第三方的贡献，还增加了云服务提供商和CNCF（云原生技术为微服务落地的开源组织）。很热闹，一起来为微服务落地是件好事，也可以避免只能依赖某一家的技术垄断。下面来说说列出的几项技术：<br>&ensp; &ensp;java9 的模块化，这个一直时java的缺陷，早年模块化规范OSGI，没有能够成为java官方承认的模块化标准，但是，模块化落地的思想和实践是一致的，已经容纳到java9。java应用首先要做的就是依据抽象，建模确定好模块，以及模块之间的依赖关系，这是系统不断迭代升级的基础，否则需要浪费大量时间去临时解决依赖问题。<br>&ensp; &ensp;回压式流，java9增加的新东西，Spring5引入Reactor提供了实现。简单的说，就是在一次传输大量数据时，可以根据接收端的速率来决定发送端的流控策略。能够解决，“避免压垮数据收件者，这样就不会阻塞任何线程”，不需要阻塞，就不需要更多的线程。数据传输的异步非阻塞管道，具有流控能力的数据流，可以更好的适应分布式批量数据之间的传输，增加吞吐量和改进服务的可靠性。<br>&ensp; &ensp;Spring Cloud，目前还是最全面的服务治理的框架，尽管还有一些不足和功能缺失。Spring，它一直倡导轻量级，最佳实践，并引领的技术的潮流。其中，也有人说Spring Cloud重，复杂。实际上服务治理要做的事情比较多，和当年MVC解决的问题大小不一样。至少，这是目前微服务落地的一种可行的方式，并且代码开源在手上也容易自主可控。如果做好依赖配置的透明，减少侵入的感觉，增加ops的能力，就会变得简单且对运维友好。<br>&ensp; &ensp;Service Mesh ， 是对Spring Cloud Client SDK实现功能的另外一种实现模式，用一个单独的Proxy 来落地服务治理的功能，或叫SideCar模式，一个应用自带一个小弟，由小弟来专门做服务治理的事，大哥就可以专注业务单元。理论不错，但是前提是你需要有这样一个服务编排的平台，门槛也不低。但是，服务或容器的编排也是当前应用devops流程的一个关键步骤或基础能力，并且，Service Mesh Proxy和语言无关，可以集成非java语言的应用， 所以Service Mesh也非常值得尝试和实践。<br>&ensp; &ensp;ServerLess 无服务，就是把服务资源透明化，你不需要管，由云服务ServerLess平台来保证资源分配，自动扩缩，高可用的事情，并提高资源的利用率，减少云服务器使用的费用。其中FAAS是它落地的一种方式，面向函数的微服务。这样可以少做很多事情，可以更加专注业务领域。让企业，开发关注的事情更少了。缺点是，需要强依赖或耦合于云服务商的实现规范。这也是一种可行的思路，并且可以指导改善微服务的落地场景，也值得尝试和使用。</p>
+<p>&ensp; &ensp;开源，自主可控，少掏钱等是前提，目标是简单到可以面向业务。这样的微服务平台，需要最佳实践。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/07/09/微服务的发展历程/" title="微服务的发展历程">https://wewld.com/2018/07/09/微服务的发展历程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/09/启程/" rel="next" title="启程">
+                <i class="fa fa-chevron-left"></i> 启程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#说说历史"><span class="nav-number">1.</span> <span class="nav-text">说说历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#再说微服务的历史"><span class="nav-number">2.</span> <span class="nav-text">再说微服务的历史</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
