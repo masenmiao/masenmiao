@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="接下来会围绕微服务，整理相关的技术，及开源一个实践项目。微服务是很多新技术，思想，方案，实践的产物，那么，我们就从Spring5的新特性说起 Spring5的核心技术反应式说反应式先从基础开始 基础 阻塞：等待(网络，磁盘IO, 或锁) 非阻塞：不等待立刻获得结果，当I/O操作无法完成时，不要将线程等待，而是返回一个错误码(EWOULDBLOCK)，这样请求就不会阻塞。  乐观锁CAS 也是非阻塞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring5核心技术">
+<meta property="og:url" content="https://wewld.com/2018/07/18/微服务分享-反应式/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="接下来会围绕微服务，整理相关的技术，及开源一个实践项目。微服务是很多新技术，思想，方案，实践的产物，那么，我们就从Spring5的新特性说起 Spring5的核心技术反应式说反应式先从基础开始 基础 阻塞：等待(网络，磁盘IO, 或锁) 非阻塞：不等待立刻获得结果，当I/O操作无法完成时，不要将线程等待，而是返回一个错误码(EWOULDBLOCK)，这样请求就不会阻塞。  乐观锁CAS 也是非阻塞">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-22T02:25:16.300Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring5核心技术">
+<meta name="twitter:description" content="接下来会围绕微服务，整理相关的技术，及开源一个实践项目。微服务是很多新技术，思想，方案，实践的产物，那么，我们就从Spring5的新特性说起 Spring5的核心技术反应式说反应式先从基础开始 基础 阻塞：等待(网络，磁盘IO, 或锁) 非阻塞：不等待立刻获得结果，当I/O操作无法完成时，不要将线程等待，而是返回一个错误码(EWOULDBLOCK)，这样请求就不会阻塞。  乐观锁CAS 也是非阻塞">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/07/18/微服务分享-反应式/"/>
+
+
+
+
+
+  <title>Spring5核心技术 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/07/18/微服务分享-反应式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring5核心技术</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-18T09:41:51+08:00">
+                2018-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>接下来会围绕微服务，整理相关的技术，及开源一个实践项目。<br>微服务是很多新技术，思想，方案，实践的产物，那么，我们就从Spring5的新特性说起</p>
+<h2 id="Spring5的核心技术"><a href="#Spring5的核心技术" class="headerlink" title="Spring5的核心技术"></a>Spring5的核心技术</h2><h3 id="反应式"><a href="#反应式" class="headerlink" title="反应式"></a>反应式</h3><p>说反应式先从基础开始</p>
+<h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><ul>
+<li>阻塞：等待(网络，磁盘IO, 或锁)</li>
+<li>非阻塞：不等待立刻获得结果，当I/O操作无法完成时，不要将线程等待，而是返回一个错误码(EWOULDBLOCK)，这样请求就不会阻塞。<br>  乐观锁CAS 也是非阻塞的方式。</li>
+<li>同步：当前线程等待调用结果</li>
+<li>异步：当前线程不等待调用结果,一般需要使用新的线程来做IO这样的事情。</li>
+</ul>
+<ul>
+<li><p>阻塞传输</p>
+<pre><code>write阻塞， 当kernel的该socket的发送缓冲区已满时。
+read阻塞，通常是发送端的数据没有到达。
+
+线程池
+目的：更多的线程来解决并发线程因为阻塞不够用的问题，本质上没有解决阻塞
+缺点：增加CPU线程上下文切换，CPU,内存的浪费
+</code></pre></li>
+</ul>
+<ul>
+<li>非阻塞传输<br>  目的：达到非阻塞，就不需要更多的线程<br>  好处：CPU,内存利用率，资源的伸缩，以及吞吐量</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>IO 模式</th>
+<th>效果</th>
+<th>IO是否阻塞</th>
+<th>IO同步or异步</th>
+<th>说明    </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BIO</td>
+<td>等待读，等待写</td>
+<td>阻塞</td>
+<td>同步</td>
+<td>阶段1：网络 I/O 阻塞；磁盘I/O 阻塞。 阶段2：数据拷贝：内核态到用户态内存</td>
+</tr>
+<tr>
+<td>NIO</td>
+<td>可以读，可以写</td>
+<td>非阻塞</td>
+<td>同步</td>
+<td>I/O操作无法完成时，返回一个错误码，这样请求就不会阻塞 ；每次发起I/O请求后立即返回，为了等到数据，需要轮询</td>
+</tr>
+<tr>
+<td>AIO</td>
+<td>读好了</td>
+<td>非阻塞</td>
+<td>异步</td>
+<td>read/write方法都是异步的，完成后操作系统会主动调用回调函数</td>
+</tr>
+</tbody>
+</table>
+<p>以上是一些总结，相关代码可以搜索 : </p>
+<ul>
+<li>BIO (等待IO)同步阻塞IO</li>
+<li>NIO (可以IO)同步非阻塞IO<br>  I/O多路复用（异步阻塞 I/O）<br>  Reactor单线程模型<br>  Reactor多线程模型<br>  主从Reactor多线程模型 (读写IO由subReactor线程池处理)    </li>
+<li><p>AIO 异步I/O (IO好了)异步非阻塞IO    </p>
+</li>
+<li><p>其它：<br>Netty网络通信的基础：异步NIO实现；<br>线程模型，包括3个线程池：<br>eventLoopGroupBoss     Aceptor线程池<br>eventLoopGroupSelector IO 线程池<br>defaultEventExecutorGroup 业务处理线程池</p>
+</li>
+</ul>
+<h4 id="反应式落地"><a href="#反应式落地" class="headerlink" title="反应式落地"></a>反应式落地</h4><pre><code>概念：反应式 就是 异步非阻塞
+</code></pre><ul>
+<li><p>响应式宣言（Reactive Manifesto） 描述了响应式系统（reactive systems）应该具备的四个关键属性：<br>  Responsive（灵敏的）、<br>  Resilient（可故障恢复的）、<br>  Elastic（可伸缩的）、<br>  Message Driven（消息驱动的）。</p>
+</li>
+<li><p>Reactive programming 是一种编程范式，类似面向对象编程。</p>
+</li>
+<li><p>Reactive Streams 则是落地的一套规范，Reactor 实现了 该规范。</p>
+</li>
+<li><p>Spring Web Flux 使用的是 Reactor。<br>  类似的反应式框架还有：Akka ,Ratpack ,Vert.x ,RxJava ,Reactive 等。    </p>
+</li>
+<li><p>Reactive Stream 接口及说明：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>接口</th>
+<th>功能实现</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>发布者</td>
+<td>Publisher</td>
+<td>Mono,Flux</td>
+<td>数据的载体:Mono 0到1个元素,Flux 0到无限个元素</td>
+</tr>
+<tr>
+<td>订阅者</td>
+<td>Subscriber</td>
+<td>一系列回调方法</td>
+<td>异步管道的衔接者</td>
+</tr>
+<tr>
+<td>订阅产生的令牌</td>
+<td>Subcription</td>
+<td>与发布者进行交互</td>
+<td>订阅请求成功时，发布者将其传递给订阅者。可以控制请求多少的元素或取消订阅。</td>
+</tr>
+<tr>
+<td>处理者</td>
+<td>Processor&lt;T,R&gt;</td>
+<td>处理阶段进行元素的转换等</td>
+<td>在发布者—订阅者的管道中作为转换器的作用</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>接口规范<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Publisher：是元素（消息）序列的提供者，根据它的订阅者的需求，来发布这些元素（消息）。</span><br><span class="line">public interface Publisher&lt;T&gt; &#123;</span><br><span class="line">    public void subscribe(Subscriber&lt;? super T&gt; s);</span><br><span class="line">&#125;</span><br><span class="line">Subscriber：当通过 Publisher.subscribe(Subscriber) 注册后，它将通过 Subscriber.onSubscribe(Subscription) 来接收消息。</span><br><span class="line">public interface Subscriber&lt;T&gt; &#123;</span><br><span class="line">    public void onSubscribe(Subscription s);</span><br><span class="line">    public void onNext(T t);</span><br><span class="line">    public void onError(Throwable t);</span><br><span class="line">    public void onComplete();</span><br><span class="line">&#125;</span><br><span class="line">Subscription：代表了消息从 Publisher 到 Subscriber 的一个一对一的生命周期。</span><br><span class="line">public interface Subscription &#123;</span><br><span class="line">    public void request(long n);</span><br><span class="line">    public void cancel();</span><br><span class="line">&#125;</span><br><span class="line">Processor：继承了 Publisher 和 Subscriber，用于转换发布者到订阅者之间管道中的元素。Processor&lt;T,R&gt; 订阅类型为 T 的数据元素，接收并转换为类型为 R 的数据，然后发布变换后的数据。</span><br><span class="line">public interface Processor&lt;T, R&gt; extends Subscriber&lt;T&gt;, Publisher&lt;R&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="回压式流Flux"><a href="#回压式流Flux" class="headerlink" title="回压式流Flux"></a>回压式流Flux</h3><pre><code>概念：数据传输的异步非阻塞管道，具有流控能力的数据流
+
+接收端进程从socket读数据的速度跟不上发送端进程向socket写数据的速度，最终导致发送端write调用阻塞
+
+“避免压垮数据收件者，这样就不会阻塞任何线程”，不需要阻塞，就不需要更多的线程
+
+回压式流，消费者决定流速，当消费速度跟不上生产的速度时，生产者按策略进行流控。
+起到了保护接收者，生产者也不需要阻塞的效果。那么，从本质上更好的解决了，服务调用之间的可靠性。
+
+图片
+</code></pre><h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><ul>
+<li><p>当订阅者处理慢于发布者时，发布者的按照策略进行流量控制<br>订阅者订阅时可以指定流控策略，可以覆盖发布者设置的流控策略</p>
+</li>
+<li><p>发布者与订阅者不在同一个线程中，使用Subscription 的 request方法可以控制速率  </p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>速度</th>
+<th>是否流控</th>
+<th>模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P快S慢</td>
+<td>需要流控</td>
+<td>pull</td>
+<td>Subscriber 使用Subscription 控制 request(n) </td>
+</tr>
+<tr>
+<td>P慢S快</td>
+<td>不需要流控</td>
+<td>push</td>
+<td>onSubscribe 默认 Long.MAX_VALUE</td>
+</tr>
+</tbody>
+</table>
+<h4 id="流控策略"><a href="#流控策略" class="headerlink" title="流控策略"></a>流控策略</h4><ul>
+<li>ERROR： 当下游跟不上节奏的时候发出一个错误信号。</li>
+<li>DROP：当下游没有准备好接收新的元素的时候抛弃这个元素。</li>
+<li>LATEST：让下游只得到上游最新的元素。</li>
+<li>BUFFER：缓存下游没有来得及处理的元素（如果缓存不限大小的可能导致OutOfMemoryError）。</li>
+</ul>
+<h3 id="反应式编程接口及操作"><a href="#反应式编程接口及操作" class="headerlink" title="反应式编程接口及操作"></a>反应式编程接口及操作</h3><h4 id="Publisher创建："><a href="#Publisher创建：" class="headerlink" title="Publisher创建："></a>Publisher创建：</h4><ul>
+<li><p>常用<br>just<br>never<br>empty<br>error<br>range<br>interval<br>concact<br>zip<br>fromArray，fromIterable        fromFuture,fromCallable 等     </p>
+</li>
+<li><p>generate，同步和逐一的方式来产生 Flux 序列。</p>
+</li>
+<li><p>create，使用 FluxSink 支持同步,异步,批量的消息产生。      可以将一系列事件转换成异步的事件流。</p>
+</li>
+<li><p>WebClient Spring5 WebFlux  提供的响应式调用工具</p>
+</li>
+</ul>
+<h4 id="转化"><a href="#转化" class="headerlink" title="转化"></a>转化</h4><ul>
+<li>中间阶段<br>filter<br>map<br>flatMap<br>then<br>zip<br>reduce 等</li>
+<li>结束阶段 - 订阅<br>subscribe</li>
+</ul>
+<h4 id="异步调度和并发"><a href="#异步调度和并发" class="headerlink" title="异步调度和并发"></a>异步调度和并发</h4><ul>
+<li><p>publishOn , subscribeOn 可以使用 Schedulers线程调度器</p>
+</li>
+<li><p>runOn(Scheduler) 开启并行执行</p>
+</li>
+</ul>
+<h4 id="更多的操作"><a href="#更多的操作" class="headerlink" title="更多的操作"></a>更多的操作</h4><h5 id="无副作用"><a href="#无副作用" class="headerlink" title="无副作用"></a>无副作用</h5><p>doOnNext、doOnError、doOncomplete、doOnSubscribe、doOnCancel等</p>
+<h5 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h5><p>when、and/or、merge、concat、collect、count、repeat</p>
+<h5 id="过滤-拣选"><a href="#过滤-拣选" class="headerlink" title="过滤/拣选"></a>过滤/拣选</h5><p>take、first、last、sample、skip、limitRequest</p>
+<h5 id="timeout、onErrorReturn、onErrorResume、doFinally、retryWhen"><a href="#timeout、onErrorReturn、onErrorResume、doFinally、retryWhen" class="headerlink" title="timeout、onErrorReturn、onErrorResume、doFinally、retryWhen"></a>timeout、onErrorReturn、onErrorResume、doFinally、retryWhen</h5><h5 id="分批"><a href="#分批" class="headerlink" title="分批"></a>分批</h5><p>window、buffer、group</p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><ul>
+<li><p>Restfull Controller 开启流式数据传递的管道，常用MediaType有：<br>TEXT_EVENT_STREAM<br>APPLICATION_STREAM_JSON_VALUE</p>
+</li>
+<li><p>如json流式产生者<br>@GetMapping(value = “”, produces = MediaType.APPLICATION_STREAM_JSON_VALUE)  </p>
+</li>
+<li><p>如json流式消费者<br>@PostMapping(path=”/persons”,consumes=MediaType.APPLICATION_STREAM_JSON_VALUE)</p>
+</li>
+<li><p>反应式数据源支持<br>目前，各个数据库都开始陆续推出异步驱动，Spring Data已经支持的响应式数据库有MongoDB、Redis、Apache Cassandra和CouchDB。</p>
+</li>
+</ul>
+<p>微服务的更多整理，可以参考下一篇博客。</p>
+<h2 id="反应式编程参考文献"><a href="#反应式编程参考文献" class="headerlink" title="反应式编程参考文献"></a>反应式编程参考文献</h2><p><a href="https://htmlpreview.github.io/?https://github.com/get-set/reactor-core/blob/master-zh/src/docs/index.html" target="_blank" rel="noopener">https://htmlpreview.github.io/?https://github.com/get-set/reactor-core/blob/master-zh/src/docs/index.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/07/18/微服务分享-反应式/" title="Spring5核心技术">https://wewld.com/2018/07/18/微服务分享-反应式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/09/微服务的发展历程/" rel="next" title="微服务的发展历程">
+                <i class="fa fa-chevron-left"></i> 微服务的发展历程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring5的核心技术"><span class="nav-number">1.</span> <span class="nav-text">Spring5的核心技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反应式"><span class="nav-number">1.1.</span> <span class="nav-text">反应式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基础"><span class="nav-number">1.1.1.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反应式落地"><span class="nav-number">1.1.2.</span> <span class="nav-text">反应式落地</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回压式流Flux"><span class="nav-number">1.2.</span> <span class="nav-text">回压式流Flux</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#流量控制"><span class="nav-number">1.2.1.</span> <span class="nav-text">流量控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流控策略"><span class="nav-number">1.2.2.</span> <span class="nav-text">流控策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反应式编程接口及操作"><span class="nav-number">1.3.</span> <span class="nav-text">反应式编程接口及操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Publisher创建："><span class="nav-number">1.3.1.</span> <span class="nav-text">Publisher创建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#转化"><span class="nav-number">1.3.2.</span> <span class="nav-text">转化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步调度和并发"><span class="nav-number">1.3.3.</span> <span class="nav-text">异步调度和并发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更多的操作"><span class="nav-number">1.3.4.</span> <span class="nav-text">更多的操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#无副作用"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">无副作用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#转换"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">转换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#过滤-拣选"><span class="nav-number">1.3.4.3.</span> <span class="nav-text">过滤/拣选</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#timeout、onErrorReturn、onErrorResume、doFinally、retryWhen"><span class="nav-number">1.3.4.4.</span> <span class="nav-text">timeout、onErrorReturn、onErrorResume、doFinally、retryWhen</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分批"><span class="nav-number">1.3.4.5.</span> <span class="nav-text">分批</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它"><span class="nav-number">1.4.</span> <span class="nav-text">其它</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反应式编程参考文献"><span class="nav-number">2.</span> <span class="nav-text">反应式编程参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
