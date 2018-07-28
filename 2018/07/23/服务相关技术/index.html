@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起： 远程调用   调用类型 关系和特点 调用效果(同步，异步) 调用形式 协议 常用         socket远程发送 client">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务相关技术">
+<meta property="og:url" content="https://wewld.com/2018/07/23/服务相关技术/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起： 远程调用   调用类型 关系和特点 调用效果(同步，异步) 调用形式 协议 常用         socket远程发送 client">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-28T23:17:31.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微服务相关技术">
+<meta name="twitter:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起： 远程调用   调用类型 关系和特点 调用效果(同步，异步) 调用形式 协议 常用         socket远程发送 client">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/07/23/服务相关技术/"/>
+
+
+
+
+
+  <title>微服务相关技术 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/07/23/服务相关技术/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微服务相关技术</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-23T07:12:21+08:00">
+                2018-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>接下来对微服务相关技术做一个整理，并输出一个实践项目。<br>其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。</p>
+<p>首先，微服务之间要相互调用，那就从远程调用开始说起：</p>
+<h3 id="远程调用"><a href="#远程调用" class="headerlink" title="远程调用"></a>远程调用</h3><table>
+<thead>
+<tr>
+<th>调用类型</th>
+<th>关系和特点</th>
+<th>调用效果(同步，异步)</th>
+<th>调用形式</th>
+<th>协议</th>
+<th>常用    </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>socket远程发送</td>
+<td>client,server2点之间</td>
+<td>原生异步</td>
+<td>ip+端口</td>
+<td>TCP/IP</td>
+<td>Socket套接字编程</td>
+</tr>
+<tr>
+<td>http远程发送</td>
+<td>Consumer - Provider 2点之间</td>
+<td>同步调用</td>
+<td>IP+端口+服务url</td>
+<td>http,https</td>
+<td>HttpClient,Spring RestTemplate等工具</td>
+</tr>
+<tr>
+<td>RPC框架</td>
+<td>Consumer - Provider 2点之间</td>
+<td>同步，异步+回调，单播</td>
+<td>本地接口</td>
+<td>Http, Https, http2, TCP自定义</td>
+<td>dubbo , GRPC等</td>
+</tr>
+<tr>
+<td>MQ中间件</td>
+<td>Producer - Broker Server - Consumer 3点之间;服务调用 + 调用解耦 + 消息暂存(削峰平谷)</td>
+<td>同步，异步+回调，单播</td>
+<td>SDK接口</td>
+<td>TCP的自定义</td>
+<td>rocketMQ ,RabbitMQ , Kafka等</td>
+</tr>
+<tr>
+<td>service mesh</td>
+<td>client - client proxy  - service proxy - service 4点，非侵入式框架</td>
+<td>均可</td>
+<td>本地调用</td>
+<td>Http,Https,http2,TCP的自定义</td>
+<td>Linkerd，Nginx，Envoy, Spring Cloud Sidecar, Consul等</td>
+</tr>
+</tbody>
+</table>
+<p>RPC框架或叫服务框架开始，Socket IO 基本上已经采用异步非阻塞的方式，大部分底层使用了Netty的实现，在服务的调用方式上也普遍支持同步，异步有回调/无回调 等多种方式。接下来，也会支持反应式流的规范，提高服务调用之间的可靠性。(反应式可以参考上一篇文章)</p>
+<h3 id="服务注册发现"><a href="#服务注册发现" class="headerlink" title="服务注册发现"></a>服务注册发现</h3><p>上面说的是服务之间远程调用的方式，接下来，我们每一个服务是分布部署在多台机器上的，而且基于集群的云服务器、虚拟机或容器环境，他们每次部署根据资源情况被编排到的虚拟机器的IP可能随时变化，那么，客户端需要知道当前调用的服务在哪些机器上，要对应哪些IP才能调用，所以，就需要引入实时的服务注册与发现。</p>
+<ul>
+<li>作用 ：解决服务名称和服务主机IP的对应关系，实现服务的实时注册，更新和查找</li>
+<li><p>服务名：服务的名称，在该服务名称下注册服务实例的多个节点。<br>服务名可以简化客户端进行服务调用，一般需要通过负载均衡器，或DNS服务，根据相应的均衡算法策略，得到本次调用的服务名对应的节点IP。还有，我们要说的服务注册发现的方式。</p>
+</li>
+<li><p>常用：Zookeeper,Etcd, Eureka(开源项目已暂停), Consul</p>
+</li>
+<li><p>服务注册与发现的产品特性:    </p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Consul</th>
+<th>zookeeper</th>
+<th>etcd</th>
+<th>euerka</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>服务健康检查</td>
+<td>支持</td>
+<td>长连接，keepalive</td>
+<td>连接心跳</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>多数据中心</td>
+<td>支持</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>kv存储服务</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>—</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>gossip,Raft</td>
+<td>paxos</td>
+<td>raft</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cap</td>
+<td>cp</td>
+<td>cp</td>
+<td>cp</td>
+<td>ap</td>
+</tr>
+<tr>
+<td>使用接口(多语言能力)</td>
+<td>支持http和dns server</td>
+<td>客户端</td>
+<td>http/grpc</td>
+<td>http（sidecar）</td>
+</tr>
+<tr>
+<td>watch支持</td>
+<td>全量/支持long polling</td>
+<td>支持</td>
+<td>支持 long polling</td>
+<td>支持 long polling/大部分增量</td>
+</tr>
+<tr>
+<td>自身监控</td>
+<td>metrics</td>
+<td>—</td>
+<td>metrics</td>
+<td>metrics</td>
+</tr>
+<tr>
+<td>安全</td>
+<td>acl /https</td>
+<td>acl</td>
+<td>https支持（弱）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>spring cloud集成</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持(项目停止)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="配置中心"><a href="#配置中心" class="headerlink" title="配置中心"></a>配置中心</h3><ul>
+<li><p>作用：统一的配置Server，因为微服务粒度更小，数量更多，所以配置信息需要统一进行维护。另外，配置可以支持动态更新。<br>常用: Spring Cloud Config ,Spring Cloud Consul Config</p>
+</li>
+<li><p>配置中心的产品特性:    </p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Spring Cloud Config</th>
+<th>Consul  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>存储</td>
+<td>git</td>
+<td>consul server</td>
+</tr>
+<tr>
+<td>动态配置</td>
+<td>依赖消息中间件</td>
+<td>定时任务</td>
+</tr>
+<tr>
+<td>配置增删改查</td>
+<td>rest api, git</td>
+<td>rest api,命令，web console</td>
+</tr>
+</tbody>
+</table>
+<h3 id="服务调用"><a href="#服务调用" class="headerlink" title="服务调用"></a>服务调用</h3><ul>
+<li><p>服务调用需要关注哪些：<br>  服务调用方式，负载均衡，超时与重试，熔断与降级，限流等    </p>
+<p> 服务框架一般提供了上面的解决方案，如Dubbo, GRPC, Spring Cloud。</p>
+<h4 id="服务调用方式"><a href="#服务调用方式" class="headerlink" title="服务调用方式"></a>服务调用方式</h4></li>
+<li>文章最开始介绍了远程调用的几种方式，当前微服务之间的主流方式，还是模拟本地接口的RPC调用方式<br>Spring Cloud 提供了OpenFeign组件， 来实现服务之间RPC的调用效果。<br>Feign 描述如下：<br>Declarative REST Client: Feign creates a dynamic implementation of an interface decorated with JAX-RS or Spring MVC annotations.<br>参考：<br><a href="https://github.com/spring-cloud/spring-cloud-openfeign" target="_blank" rel="noopener">https://github.com/spring-cloud/spring-cloud-openfeign</a>    </li>
+</ul>
+<p>服务调用组件一般需要依赖：负载均衡 ,熔断降级 组件，对应Spring Cloud 的是 Ribbon ， hystrix，并且，具有超时与重试的机制。</p>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡:"></a>负载均衡:</h4><ul>
+<li>将工作负载分布到多个服务器，提高性能和可靠性。在请求的每一个层次都有对应的负载均衡器。 </li>
+</ul>
+<h5 id="客户端负载均衡"><a href="#客户端负载均衡" class="headerlink" title="客户端负载均衡"></a>客户端负载均衡</h5><ul>
+<li>由客户端实现负载均衡策略，如：<br>Dubbo, spring cloud Ribbon<br>客户端负载均衡一般需要依赖服务注册中心，从注册中心获取服务的所有地址，并实现了不同的负载均衡算法，根据算法获得一个IP来路由转发。</li>
+</ul>
+<h5 id="服务器端负载均衡"><a href="#服务器端负载均衡" class="headerlink" title="服务器端负载均衡"></a>服务器端负载均衡</h5><ul>
+<li><p>服务器端负载均衡常用的有：<br>  Dns server , LVS ， Nginx 等</p>
+</li>
+<li><p>服务端负载均衡一般有以下几种类型：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>功能</th>
+<th>常用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS Server</td>
+<td>域名查找IP的服务</td>
+<td>DNS名字 配置多个IP，也支持基于地址的域名解析，解析成距离用户最近的服务器地址</td>
+<td>DNS服务商，内部DNS Server</td>
+</tr>
+<tr>
+<td>二层负载均衡</td>
+<td>MAC</td>
+<td>提供一个VIP（虚IP），集群中不同的机器采用相同IP地址，但是机器的MAC地址不一样，改写报文的目标MAC地址的方式将请求转发到目标机器实现负载均衡</td>
+<td></td>
+</tr>
+<tr>
+<td>三层负载均衡</td>
+<td>VIP</td>
+<td>提供一个VIP（虚IP），但是集群中不同的机器采用不同的IP地址。根据不同的负载均衡算法，获得并转发至不同的真实服务器IP</td>
+<td>LVS</td>
+</tr>
+<tr>
+<td>四层负载均衡</td>
+<td>TCP,UDP</td>
+<td>四层协议中除了包含源IP、目标IP以外，还包含源端口号及目的端口号。在三层负载均衡的基础上，用ip+port接收请求，再转发到对应的机器。</td>
+<td>F5硬件负载均衡，LVS,Haproxy</td>
+</tr>
+<tr>
+<td>七层负载均衡</td>
+<td>http，代理</td>
+<td>应用层协议较多，常用http、radius、dns，根据请求内容负载均衡</td>
+<td>Nginx,Haproxy</td>
+</tr>
+<tr>
+<td>http重定向</td>
+<td>302跳转</td>
+<td>根据请求信息，下发一个新的地址，实现负载均衡</td>
+<td>逻辑根据业务场景实现，一般用在CDN厂商文件下载，根据用户位置，CDN情况，文件热点等，动态的下发一个可用的CDN文件下载地址</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>其它</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>特点</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全局负载均衡器GSLB</td>
+<td>Http</td>
+<td>多数据中心支持</td>
+<td>基于DNS、重定向、路由协议实现。用于CDN 就近性，健康检查策略来动态分配流量</td>
+</tr>
+<tr>
+<td>数据层负载均衡</td>
+<td>数据的均衡</td>
+<td>均衡可以通过数据的均衡与请求的均衡实现</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="微服务有关的负载均衡"><a href="#微服务有关的负载均衡" class="headerlink" title="微服务有关的负载均衡"></a>微服务有关的负载均衡</h5><ul>
+<li>一般从请求入口到后台每一层用到的负载均衡：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS Server</td>
+<td>支持基于地址的域名解析，解析成距离用户最近的服务器地址</td>
+<td>一般用作第一级负载均衡</td>
+</tr>
+<tr>
+<td>TCP 负载均衡 (四层)</td>
+<td>海量流量转发</td>
+<td>LVS,一般作为前端接入的负载均衡</td>
+</tr>
+<tr>
+<td>Http 负载均衡 (七层)</td>
+<td>Http</td>
+<td>Nginx负载均衡，并接入微服务体系</td>
+</tr>
+<tr>
+<td>服务网关负载均衡</td>
+<td>Http</td>
+<td>路由配置，限流，安全，熔断等</td>
+</tr>
+<tr>
+<td>服务层负载均衡</td>
+<td>依赖注册中心的客户端负载均衡 ; 或服务端负载均衡</td>
+<td>和微服务框架有关</td>
+</tr>
+</tbody>
+</table>
+<h5 id="实际上服务之间-服务层-的负载均衡有几种实现方式："><a href="#实际上服务之间-服务层-的负载均衡有几种实现方式：" class="headerlink" title="实际上服务之间(服务层)的负载均衡有几种实现方式："></a>实际上服务之间(服务层)的负载均衡有几种实现方式：</h5><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>常用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>集中式</td>
+<td>由统一的负载均衡服务器来路由</td>
+<td>DNS Server-&gt;Load Balancer Server</td>
+</tr>
+<tr>
+<td>进程内</td>
+<td>服务和负载均衡是一个进程，一般由服务框架提供的本地jar包实现</td>
+<td>Dubbo, spring cloud Ribbon  </td>
+</tr>
+<tr>
+<td>独立进程</td>
+<td>服务所在主机独立一个进程做负载均衡，也称作sidecar 或proxy模式负载均衡</td>
+<td>service mesh  </td>
+</tr>
+</tbody>
+</table>
+<h5 id="负载均衡算法"><a href="#负载均衡算法" class="headerlink" title="负载均衡算法"></a>负载均衡算法</h5><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>轮询算法</td>
+<td>顺序循环，DNS Server </td>
+</tr>
+<tr>
+<td>随机算法</td>
+<td>随机分配,不适合机器配置不同的场景</td>
+</tr>
+<tr>
+<td>加权算法</td>
+<td>考虑到机器的差异性，分配给机器不同的权重；可以应用在轮询，随机，最少链接，Hash等算法。</td>
+</tr>
+<tr>
+<td>哈希法</td>
+<td>同一IP地址的请求，同一会话期内，转发到相同的服务器</td>
+</tr>
+<tr>
+<td>一致性哈希</td>
+<td>减少集群机器变化带来的影响</td>
+</tr>
+<tr>
+<td>最少连接算法</td>
+<td>优先选择连接数最少的服务器，动态分配,需要监控服务器请求连接数 </td>
+</tr>
+</tbody>
+</table>
+<h4 id="超时与重试："><a href="#超时与重试：" class="headerlink" title="超时与重试："></a>超时与重试：</h4><h5 id="超时："><a href="#超时：" class="headerlink" title="超时："></a>超时：</h5><p>从服务调用的发展来看，或从基础到上层框架来看，有如下一些超时控制：</p>
+<ul>
+<li><p>TCP超时有一系列控制，其中和连接，发送有关的是:</p>
+<pre><code>Connection-Establishment Timer    建立连接超时
+Retransmission Timer    发送等待ACK，没有等到就会重传，重传到最大次数超时
+</code></pre></li>
+<li><p>Socket BIO，阻塞式IO:</p>
+<pre><code>连接        三次握手超时,connect(SocketAddress endpoint, int timeout)
+写        缓冲区等待，TCP发送超时重传（超时时间操作系统可配置）
+读        setSoTimeout，一次读取数据的等待超时时间
+</code></pre></li>
+<li><p>HttpClient:</p>
+<pre><code>老版本:
+setConnectTimeout：建立连接超时时间
+setSocketTimeout： 读取数据的等待超时时间（或两个数据包之间的最大间隔时间），对应BIO-
+新版本增加了：
+setConnectionRequestTimeout：从连接池获取可用连接的等待超时时间
+</code></pre></li>
+<li><p>Socket NIO:</p>
+<pre><code>连接，写，读 不需要阻塞，所以没有超时时间
+</code></pre></li>
+<li><p>Netty ，异步非阻塞IO ，框架层在NIO基础上增加了:</p>
+<pre><code>连接超时: Scheduled定时器，超时后关闭连接。 提供方法可以设置。
+</code></pre></li>
+<li><p>Dobbo 等RPC框架，在Netty基础上增加了：</p>
+<pre><code>同步发送并等待response数据的超时时间。并提供外部配置，以及超时后的重试次数。
+</code></pre></li>
+<li><p>Spring Cloud RPC Feign ，在Netty基础上主要提供了：连接，同步发送等待response返回的超时时间：</p>
+<pre><code>ConnectTimeout：请求连接的超时时间
+ReadTimeout：请求处理的超时时间
+</code></pre><p>Feign 可以单独设置 ，默认会读取ribbon的两个时间设置。建议用ribbon的。    </p>
+</li>
+</ul>
+<h5 id="重试"><a href="#重试" class="headerlink" title="重试"></a>重试</h5><ul>
+<li>重试是配合调用超时，或网络抖动异常时，进行再一次的发送，一般可以配置重试的策略和次数</li>
+<li>Spring Cloud Ribbon:    <pre><code>OkToRetryOnAllOperations：对所有操作请求都进行重试
+MaxAutoRetriesNextServer：切换实例的重试次数 , 默认2次（不包括首次）
+MaxAutoRetries：对当前实例的重试次数
+</code></pre>超过最大重试还超时，则由框架抛出异常或进行熔断处理</li>
+<li>注意： 超时时间不能太短， 重试次数不能太多，不合理的设置会造成请求堆积不断增长，造成服务器雪崩</li>
+</ul>
+<h4 id="熔断与降级"><a href="#熔断与降级" class="headerlink" title="熔断与降级:"></a>熔断与降级:</h4><h5 id="熔断"><a href="#熔断" class="headerlink" title="熔断"></a>熔断</h5><ul>
+<li><p>熔断器<br>断开保护开关，如果服务方已经不可用了，调用者默认的重试策略又增大了流量，导致资源瓶颈后调用者也不可用，最终导致了服务的雪崩效应。<br>熔断器的目的是让服务调用拥有自我保护和恢复的能力.</p>
+</li>
+<li><p>资源隔离：<br>通过将每个依赖服务分配独立的资源（线程池，或信号量）进行资源隔离, 从而避免服务雪崩. </p>
+</li>
+<li><p>熔断器模式：</p>
+</li>
+</ul>
+<ol>
+<li>当熔断器开关关闭时, 请求被允许通过熔断器. 如果当前健康状况高于设定阈值, 开关继续保持关闭. 如果当前健康状况低于设定阈值, 开关则切换为打开状态.</li>
+<li>当熔断器开关打开时, 请求被禁止通过，并进行降级处理。</li>
+<li>经过一段时间后, 熔断开关为半打开状态，部分流量流入，当请求成功时，开关关闭。若该请求失败, 熔断器继续保持打开状态, 接下来的请求被禁止通过.</li>
+</ol>
+<p>降级处理后，根据业务级别，在服务端恢复后，进行补偿逻辑处理。</p>
+<ul>
+<li>spring cloud:    <pre><code>hystrix : 熔断器 
+可以配置熔断超时时间 timeoutInMilliseconds
+</code></pre></li>
+</ul>
+<p>Hystrix 超时时间控制的是总的请求处理时间，所以Hystrix超时时间要包括 ribbon超时时间 * 重试次数 。<br>Hytrix,ribbon可以分服务单独设置timeout。</p>
+<pre><code>Circuit Breaker 断路器行为配置：
+    requestVolumeThreshold 滑动窗口的大小（检测的数据范围），默认为20 
+    sleepWindowInMilliseconds 多久以后开始尝试是否恢复，默认为5000ms
+    errorThresholdPercentage 错误率，默认50%
+</code></pre><ul>
+<li><p>Hystrix Metrics<br>Hystrix 提供了实时的监控，包括请求成功，失败（客户端抛出的异常），超时和线程拒绝。</p>
+</li>
+<li><p>Hystrix Dashboard  ： Hystrix Metrics的展示<br>监控单实例服务，需要通过访问实例的/actuator/hystrix.stream接口来实现（依赖actuator）<br>监控集群服务，需要通过stream/mq 发送到Turbine进行聚合，再用Dashboard 进行统一展示。</p>
+</li>
+</ul>
+<h5 id="降级"><a href="#降级" class="headerlink" title="降级:"></a>降级:</h5><ul>
+<li><p>降级方法: 当熔断器打开后，快速失败，进行降级处理。<br>比如: 非关键步骤可以跳过，或可以先保存下来，之后等到对方恢复了，再进行补偿。</p>
+</li>
+<li><p>spring cloud:     </p>
+<pre><code>hystrix可以配置 fallbackMethod 熔断后的降级方法。
+@HystrixCommand(fallbackMethod = &quot;&quot;) 
+@FeignClient(value=&quot;&quot;, fallback = )
+</code></pre></li>
+</ul>
+<h4 id="限流"><a href="#限流" class="headerlink" title="限流:"></a>限流:</h4><ul>
+<li>因为一切系统皆有瓶颈，所以首先要保证可以活下来</li>
+</ul>
+<h5 id="限流算法："><a href="#限流算法：" class="headerlink" title="限流算法："></a>限流算法：</h5><ul>
+<li><p>固定、滑动时间窗口限流算法</p>
+</li>
+<li><p>令牌桶、漏桶限流算法<br>常用Google Guava提供的 RateLimit 工具</p>
+</li>
+<li><p>分布式限流算法<br>一般采用redis计数器实现，需要注意：<br>数据一致性问题 , 超时问题 , 性能问题</p>
+</li>
+<li><p>限流拒绝策略<br>拒绝<br>阻塞<br>降级等</p>
+</li>
+</ul>
+<h5 id="限流规则配置"><a href="#限流规则配置" class="headerlink" title="限流规则配置"></a>限流规则配置</h5><p>时间粒度<br>接口粒度<br>最大限流值</p>
+<h5 id="服务自身限流："><a href="#服务自身限流：" class="headerlink" title="服务自身限流："></a>服务自身限流：</h5><p>首先要保护自己，那么就要保证接入的流量在该应用-服务的最大tps，qps之内。一般采用单机限流算法就可以。</p>
+<h5 id="服务网关限流"><a href="#服务网关限流" class="headerlink" title="服务网关限流"></a>服务网关限流</h5><p>外部过来的请求，因为网关多实例集群，一般采用分布式限流策略。</p>
+<h5 id="Reactive-Stream限流："><a href="#Reactive-Stream限流：" class="headerlink" title="Reactive Stream限流："></a>Reactive Stream限流：</h5><p>关于回压式流，可以参考上一篇“反应式”的文章。</p>
+<h3 id="服务网关"><a href="#服务网关" class="headerlink" title="服务网关"></a>服务网关</h3><p>微服务的统一入口,是外部请求和内部微服务之间的桥梁。主要功能包括：  </p>
+<ul>
+<li>路由：    外部请求Path等规则到微服务的对应关系。一般包括请求规则断言和过滤器。<br>断言：匹配 HTTP 请求的任何内容，例如 headers 或参数。如果断言为真，则路由匹配。<br>过滤器：修改请求和响应。<br>路由的配置可以支持动态更新。    </li>
+<li>安全：<br>鉴权、脱敏，流量清洗，后端签名,黑名单等     </li>
+<li>限流，粒度包括：<br>服务粒度<br>用户粒度，用户，IP<br>ORIGIN粒度<br>接口粒度<br>自由组合与自定义<br>与监控配合，进行限流操作    </li>
+<li>调用时的超时重试，熔断降级  </li>
+<li>日志记录,性能监控    </li>
+<li><p>灰度（请求规则和Ribbon规则匹配）    </p>
+</li>
+<li><p>Spring Cloud Gateway<br>基于反应式的异步非阻塞网关<br>参考：<br><a href="https://github.com/spring-cloud/spring-cloud-gateway" target="_blank" rel="noopener">https://github.com/spring-cloud/spring-cloud-gateway</a></p>
+</li>
+</ul>
+<h3 id="调用链"><a href="#调用链" class="headerlink" title="调用链"></a>调用链</h3><h4 id="调用链介绍"><a href="#调用链介绍" class="headerlink" title="调用链介绍"></a>调用链介绍</h4><p>服务网关接入微服务的一次请求调用，请求的这个微服务可能又依赖并调用了多个微服务，或中间件等。<br>调用链就是追踪上报收集服务调用过程中经历了哪些组件、哪些微服务、请求总时长、每个组件所花时长等信息。用于故障定位，统计分析和监控。<br>调用链属于APM (Application Performance Management) 即应用性能管理监控体系的一部分，并遵循分布式追踪OpenTracing标准,具体可以参考：<br><a href="https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/specification.md" target="_blank" rel="noopener">https://github.com/opentracing-contrib/opentracing-specification-zh/blob/master/specification.md</a><br><a href="http://opentracing.io/documentation/pages/translations.html" target="_blank" rel="noopener">http://opentracing.io/documentation/pages/translations.html</a></p>
+<p>调用链一般需要由以下组件构成：<br>数据埋点上报 - Spring Cloud Sleuth<br>数据收集，保存，提供查询API -  Zipkin<br>查询展示 - Zipkin 或其它</p>
+<p>其它开源框架还有：<br>Pinpoint, Skywalking, CAT, EgleEye    </p>
+<h4 id="Spring-Cloud"><a href="#Spring-Cloud" class="headerlink" title="Spring Cloud"></a>Spring Cloud</h4><h5 id="Sleuth"><a href="#Sleuth" class="headerlink" title="Sleuth"></a>Sleuth</h5><ul>
+<li><p>可用于跟踪集成的组件，埋点类型有：<br>Runnable and Callable<br>Hystrix<br>RxJava<br>HTTP integration<br>HTTP Client Integration<br>Feign<br>Asynchronous Communication<br>Messaging    </p>
+</li>
+<li><p>采样类型<br>AlwaysSampler<br>NeverSampler<br>IsTracingSampler<br>PercentageBasedSampler<br>常用的配置：spring.sleuth.sampler.probability=    </p>
+</li>
+<li><p>数据上报的2种方式：    </p>
+</li>
+</ul>
+<ol>
+<li>通过http直接上报Zipkin    </li>
+<li>通过spring cloud stream 消息中间件发送Zipkin     </li>
+</ol>
+<p>具体可以参考官方文档：<br><a href="https://cloud.spring.io/spring-cloud-sleuth/" target="_blank" rel="noopener">https://cloud.spring.io/spring-cloud-sleuth/</a></p>
+<h5 id="Zipkin"><a href="#Zipkin" class="headerlink" title="Zipkin"></a>Zipkin</h5><ul>
+<li>Zipkin Client:<br>zinkin埋点客户端如Sleuth，目前客户端官方及第三方提供的支持有java，C，python，JavaScript等    </li>
+<li>Transport：<br>传输方式，http请求 或 消息中间件    </li>
+<li>Database：<br>可以配置为mysql、elasticsearch或Cassandra持久化。       </li>
+<li>Zipkin Server：<br>用于由Collector收集、存储、聚合及展示跟踪数据    </li>
+</ul>
+<p>一般也可以使用ELK，来收集和展示，便于个性化的需求扩展实现。</p>
+<p>官方文档可以参考：<br><a href="https://github.com/openzipkin/zipkin" target="_blank" rel="noopener">https://github.com/openzipkin/zipkin</a></p>
+<h3 id="微服务实践"><a href="#微服务实践" class="headerlink" title="微服务实践"></a>微服务实践</h3><p>最后，分享一个用Spring Cloud Finchley 搭建的微服务实践样例：<br><a href="https://github.com/masenmiao/acloud-finchley-example" target="_blank" rel="noopener">https://github.com/masenmiao/acloud-finchley-example</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/07/23/服务相关技术/" title="微服务相关技术">https://wewld.com/2018/07/23/服务相关技术/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/18/微服务分享-反应式/" rel="next" title="反应式">
+                <i class="fa fa-chevron-left"></i> 反应式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#远程调用"><span class="nav-number">1.</span> <span class="nav-text">远程调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务注册发现"><span class="nav-number">2.</span> <span class="nav-text">服务注册发现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置中心"><span class="nav-number">3.</span> <span class="nav-text">配置中心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务调用"><span class="nav-number">4.</span> <span class="nav-text">服务调用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务调用方式"><span class="nav-number">4.1.</span> <span class="nav-text">服务调用方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#负载均衡"><span class="nav-number">4.2.</span> <span class="nav-text">负载均衡:</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#客户端负载均衡"><span class="nav-number">4.2.1.</span> <span class="nav-text">客户端负载均衡</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务器端负载均衡"><span class="nav-number">4.2.2.</span> <span class="nav-text">服务器端负载均衡</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#微服务有关的负载均衡"><span class="nav-number">4.2.3.</span> <span class="nav-text">微服务有关的负载均衡</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实际上服务之间-服务层-的负载均衡有几种实现方式："><span class="nav-number">4.2.4.</span> <span class="nav-text">实际上服务之间(服务层)的负载均衡有几种实现方式：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#负载均衡算法"><span class="nav-number">4.2.5.</span> <span class="nav-text">负载均衡算法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#超时与重试："><span class="nav-number">4.3.</span> <span class="nav-text">超时与重试：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#超时："><span class="nav-number">4.3.1.</span> <span class="nav-text">超时：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重试"><span class="nav-number">4.3.2.</span> <span class="nav-text">重试</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#熔断与降级"><span class="nav-number">4.4.</span> <span class="nav-text">熔断与降级:</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#熔断"><span class="nav-number">4.4.1.</span> <span class="nav-text">熔断</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#降级"><span class="nav-number">4.4.2.</span> <span class="nav-text">降级:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#限流"><span class="nav-number">4.5.</span> <span class="nav-text">限流:</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#限流算法："><span class="nav-number">4.5.1.</span> <span class="nav-text">限流算法：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#限流规则配置"><span class="nav-number">4.5.2.</span> <span class="nav-text">限流规则配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务自身限流："><span class="nav-number">4.5.3.</span> <span class="nav-text">服务自身限流：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务网关限流"><span class="nav-number">4.5.4.</span> <span class="nav-text">服务网关限流</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Reactive-Stream限流："><span class="nav-number">4.5.5.</span> <span class="nav-text">Reactive Stream限流：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务网关"><span class="nav-number">5.</span> <span class="nav-text">服务网关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调用链"><span class="nav-number">6.</span> <span class="nav-text">调用链</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#调用链介绍"><span class="nav-number">6.1.</span> <span class="nav-text">调用链介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Cloud"><span class="nav-number">6.2.</span> <span class="nav-text">Spring Cloud</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Sleuth"><span class="nav-number">6.2.1.</span> <span class="nav-text">Sleuth</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Zipkin"><span class="nav-number">6.2.2.</span> <span class="nav-text">Zipkin</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务实践"><span class="nav-number">7.</span> <span class="nav-text">微服务实践</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="We Wld">
 <meta property="og:description" content="接下来会围绕微服务，整理相关的技术，及开源一个实践项目。微服务是很多新技术，思想，方案，实践的产物，那么，我们就从Spring5的新特性反应式说起 反应式说反应式先从基础开始 基础 阻塞：等待(网络，磁盘IO, 或锁) 非阻塞：不等待立刻获得结果，当I/O操作无法完成时，不要将线程等待，而是返回一个错误码(EWOULDBLOCK)，这样请求就不会阻塞。  乐观锁CAS 也是非阻塞的方式。 同步：当">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-22T02:42:58.176Z">
+<meta property="og:updated_time" content="2018-07-22T23:02:48.817Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="反应式">
 <meta name="twitter:description" content="接下来会围绕微服务，整理相关的技术，及开源一个实践项目。微服务是很多新技术，思想，方案，实践的产物，那么，我们就从Spring5的新特性反应式说起 反应式说反应式先从基础开始 基础 阻塞：等待(网络，磁盘IO, 或锁) 非阻塞：不等待立刻获得结果，当I/O操作无法完成时，不要将线程等待，而是返回一个错误码(EWOULDBLOCK)，这样请求就不会阻塞。  乐观锁CAS 也是非阻塞的方式。 同步：当">
@@ -437,7 +437,7 @@ read阻塞，通常是发送端的数据没有到达。
 
 图片
 </code></pre><h4 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h4><ul>
-<li><p>当订阅者处理慢于发布者时，发布者的按照策略进行流量控制<br>订阅者订阅时可以指定流控策略，可以覆盖发布者设置的流控策略</p>
+<li><p>当订阅者处理慢于发布者时，发布者的按照策略进行流量控制<br>订阅者订阅时可以指定流控策略，并覆盖发布者设置的流控策略</p>
 </li>
 <li><p>发布者与订阅者不在同一个线程中，使用Subscription 的 request方法可以控制速率  </p>
 </li>
@@ -589,6 +589,10 @@ read阻塞，通常是发送端的数据没有到达。
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/07/23/服务相关技术/" rel="prev" title="微服务相关技术">
+                微服务相关技术 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -664,7 +668,7 @@ read阻塞，通常是发送端的数据没有到达。
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
