@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起： 远程调用   调用类型 关系和特点 调用效果(同步，异步) 调用形式 协议 常用         socket远程发送 client">
+<meta name="description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="微服务相关技术">
+<meta property="og:title" content="微服务框架相关技术">
 <meta property="og:url" content="https://wewld.com/2018/07/23/服务相关技术/index.html">
 <meta property="og:site_name" content="We Wld">
-<meta property="og:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起： 远程调用   调用类型 关系和特点 调用效果(同步，异步) 调用形式 协议 常用         socket远程发送 client">
+<meta property="og:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-28T23:17:31.005Z">
+<meta property="og:updated_time" content="2018-07-29T23:17:54.838Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="微服务相关技术">
-<meta name="twitter:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起： 远程调用   调用类型 关系和特点 调用效果(同步，异步) 调用形式 协议 常用         socket远程发送 client">
+<meta name="twitter:title" content="微服务框架相关技术">
+<meta name="twitter:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起：">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>微服务相关技术 | We Wld</title>
+  <title>微服务框架相关技术 | We Wld</title>
   
 
 
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">微服务相关技术</h1>
+          <h1 class="post-title" itemprop="name headline">微服务框架相关技术</h1>
         
 
         <div class="post-meta">
@@ -309,7 +309,7 @@
       
 
       
-        <p>接下来对微服务相关技术做一个整理，并输出一个实践项目。<br>其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。</p>
+        <p>接下来对微服务相关技术做一个整理，并输出一个实践项目。<br>如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。<br>这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。</p>
 <p>首先，微服务之间要相互调用，那就从远程调用开始说起：</p>
 <h3 id="远程调用"><a href="#远程调用" class="headerlink" title="远程调用"></a>远程调用</h3><table>
 <thead>
@@ -388,7 +388,28 @@
 </thead>
 <tbody>
 <tr>
-<td>服务健康检查</td>
+<td>编程语言</td>
+<td>Go</td>
+<td>Java</td>
+<td>Go</td>
+<td>Java</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>Gossip(发现和协调),Raft(选举和多数派)</td>
+<td>paxos</td>
+<td>raft</td>
+<td>—</td>
+</tr>
+<tr>
+<td>cap</td>
+<td>Gossip-ap,Raft-cp</td>
+<td>cp</td>
+<td>cp</td>
+<td>ap</td>
+</tr>
+<tr>
+<td>健康检查</td>
 <td>支持</td>
 <td>长连接，keepalive</td>
 <td>连接心跳</td>
@@ -409,22 +430,8 @@
 <td>—</td>
 </tr>
 <tr>
-<td>一致性</td>
-<td>gossip,Raft</td>
-<td>paxos</td>
-<td>raft</td>
-<td>—</td>
-</tr>
-<tr>
-<td>cap</td>
-<td>cp</td>
-<td>cp</td>
-<td>cp</td>
-<td>ap</td>
-</tr>
-<tr>
 <td>使用接口(多语言能力)</td>
-<td>支持http和dns server</td>
+<td>http和dns</td>
 <td>客户端</td>
 <td>http/grpc</td>
 <td>http（sidecar）</td>
@@ -619,7 +626,7 @@
 </tr>
 <tr>
 <td>服务层负载均衡</td>
-<td>依赖注册中心的客户端负载均衡 ; 或服务端负载均衡</td>
+<td>客户端负载均衡 ; 或服务端负载均衡(dns,vip)</td>
 <td>和微服务框架有关</td>
 </tr>
 </tbody>
@@ -867,7 +874,7 @@ MaxAutoRetries：对当前实例的重试次数
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://wewld.com/2018/07/23/服务相关技术/" title="微服务相关技术">https://wewld.com/2018/07/23/服务相关技术/</a>
+    <a href="https://wewld.com/2018/07/23/服务相关技术/" title="微服务框架相关技术">https://wewld.com/2018/07/23/服务相关技术/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
