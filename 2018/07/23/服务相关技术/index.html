@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起：">
+<meta name="description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微服务框架相关技术">
 <meta property="og:url" content="https://wewld.com/2018/07/23/服务相关技术/index.html">
 <meta property="og:site_name" content="We Wld">
-<meta property="og:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起：">
+<meta property="og:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-29T23:17:54.838Z">
+<meta property="og:updated_time" content="2018-08-08T23:14:51.687Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微服务框架相关技术">
-<meta name="twitter:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说起：">
+<meta name="twitter:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说">
 
 
 
@@ -309,7 +309,7 @@
       
 
       
-        <p>接下来对微服务相关技术做一个整理，并输出一个实践项目。<br>如果从服务构建到生产运营，包括的技术有：微服务框架，持续集成，容器化，资源调度与服务编排，监控等一些大的范围。<br>这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。</p>
+        <p>接下来对微服务相关技术做一个整理，并输出一个实践项目。<br>如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。<br>这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。</p>
 <p>首先，微服务之间要相互调用，那就从远程调用开始说起：</p>
 <h3 id="远程调用"><a href="#远程调用" class="headerlink" title="远程调用"></a>远程调用</h3><table>
 <thead>
@@ -792,7 +792,7 @@ MaxAutoRetries：对当前实例的重试次数
 <ul>
 <li>路由：    外部请求Path等规则到微服务的对应关系。一般包括请求规则断言和过滤器。<br>断言：匹配 HTTP 请求的任何内容，例如 headers 或参数。如果断言为真，则路由匹配。<br>过滤器：修改请求和响应。<br>路由的配置可以支持动态更新。    </li>
 <li>安全：<br>鉴权、脱敏，流量清洗，后端签名,黑名单等     </li>
-<li>限流，粒度包括：<br>服务粒度<br>用户粒度，用户，IP<br>ORIGIN粒度<br>接口粒度<br>自由组合与自定义<br>与监控配合，进行限流操作    </li>
+<li>限流：<br>因为微服务的数量会变化，所以，服务网关限流一般采用分布式限流算法。限流的粒度包括：<br>服务粒度<br>用户粒度，用户，IP<br>ORIGIN粒度<br>接口粒度<br>自由组合与自定义<br>与监控配合，进行限流操作    </li>
 <li>调用时的超时重试，熔断降级  </li>
 <li>日志记录,性能监控    </li>
 <li><p>灰度（请求规则和Ribbon规则匹配）    </p>
@@ -906,6 +906,10 @@ MaxAutoRetries：对当前实例的重试次数
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/08/09/微服务相关技术/" rel="prev" title="微服务框架的不足">
+                微服务框架的不足 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -981,7 +985,7 @@ MaxAutoRetries：对当前实例的重试次数
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

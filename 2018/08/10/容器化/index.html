@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="什么是容器可以放很多东西的就是容器，在微服务中，我们可以在容器中放操作系统，放jdk，放我们想要的工具，应用等，一般他们有先后的层级关系，把他们打包到一起形成一个更大的镜像，运行起来就是一个容器。 微服务为什么要容器化行为标准：容器有标准化行为抽象，以一致的命令运行和管理；环境一致：镜像使运行时环境一致，可以在任何地方运行；因为上面的标准和一致性，容器化使开发者专注于应用逻辑和依赖关系，而运营团队">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器化">
+<meta property="og:url" content="https://wewld.com/2018/08/10/容器化/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="什么是容器可以放很多东西的就是容器，在微服务中，我们可以在容器中放操作系统，放jdk，放我们想要的工具，应用等，一般他们有先后的层级关系，把他们打包到一起形成一个更大的镜像，运行起来就是一个容器。 微服务为什么要容器化行为标准：容器有标准化行为抽象，以一致的命令运行和管理；环境一致：镜像使运行时环境一致，可以在任何地方运行；因为上面的标准和一致性，容器化使开发者专注于应用逻辑和依赖关系，而运营团队">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-12T08:26:32.258Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="容器化">
+<meta name="twitter:description" content="什么是容器可以放很多东西的就是容器，在微服务中，我们可以在容器中放操作系统，放jdk，放我们想要的工具，应用等，一般他们有先后的层级关系，把他们打包到一起形成一个更大的镜像，运行起来就是一个容器。 微服务为什么要容器化行为标准：容器有标准化行为抽象，以一致的命令运行和管理；环境一致：镜像使运行时环境一致，可以在任何地方运行；因为上面的标准和一致性，容器化使开发者专注于应用逻辑和依赖关系，而运营团队">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/08/10/容器化/"/>
+
+
+
+
+
+  <title>容器化 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/08/10/容器化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">容器化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-10T06:51:00+08:00">
+                2018-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是容器"><a href="#什么是容器" class="headerlink" title="什么是容器"></a>什么是容器</h2><p>可以放很多东西的就是容器，在微服务中，我们可以在容器中放操作系统，放jdk，放我们想要的工具，应用等，一般他们有先后的层级关系，把他们打包到一起形成一个更大的镜像，运行起来就是一个容器。</p>
+<h2 id="微服务为什么要容器化"><a href="#微服务为什么要容器化" class="headerlink" title="微服务为什么要容器化"></a>微服务为什么要容器化</h2><p>行为标准：容器有标准化行为抽象，以一致的命令运行和管理；<br>环境一致：镜像使运行时环境一致，可以在任何地方运行；<br>因为上面的标准和一致性，容器化使开发者专注于应用逻辑和依赖关系，而运营团队专注于部署和管理。也为运维自动化的弹性伸缩，应用自愈打下了基础。<br>还包括，相比虚拟机更轻，启动速度更快 等方面。<br>所以说，微服务，容器是天生一对，与持续集成，调度编排等构成了开发运维devops的最佳实践。</p>
+<h2 id="容器介绍"><a href="#容器介绍" class="headerlink" title="容器介绍"></a>容器介绍</h2><p>容器提供了一种逻辑打包机制，可以脱离实际运行的环境，不管目标环境是私有数据中心的虚拟机，物理机、还是公有云。</p>
+<p>容器相关规范和技术：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>解释 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OCI</td>
+<td>Open Container Initiative致力于建立一个容器运行时和镜像格式的规范</td>
+</tr>
+<tr>
+<td>runC</td>
+<td>docker 捐赠给 OCI 的一个符合标准的 runtime 实现，起源于libcontainer ，LXC 。使用Linux内核提供的相关隔离技术，比如cgroups，namespace等</td>
+</tr>
+<tr>
+<td>containerd</td>
+<td>容器运行时管理，用于集成到更上层的系统里，比如Swarm, Kubernetes, Mesos等容器编排系统</td>
+</tr>
+<tr>
+<td>CRI</td>
+<td>kubernetes引入了CRI(Container Runtime Interface)，目的在于通过一种标准的方式来集成各种不同容器runtime</td>
+</tr>
+<tr>
+<td>CRI-containerd</td>
+<td>是基于containerd的CRI实现</td>
+</tr>
+<tr>
+<td>Hyper</td>
+<td>解决隔离性不强的安全问题，hyper container使用OCI镜像规范，hyper的runtime是基于hypervisor的runV，兼容OCI runtime规范.</td>
+</tr>
+</tbody>
+</table>
+<p>容器相关内容：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>解释</th>
+<th>英文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>镜像</td>
+<td>文件的层次结构，以及包含如何运行容器的元数据</td>
+<td>image</td>
+</tr>
+<tr>
+<td>容器</td>
+<td>是一个从镜像中启动，包含正在运行的程序的进程</td>
+<td>container</td>
+</tr>
+<tr>
+<td>仓库</td>
+<td>仓库镜像，有公共Docker Hub，私有Harbor</td>
+<td>registry</td>
+</tr>
+<tr>
+<td>卷</td>
+<td>容器外的存储</td>
+<td>volume</td>
+</tr>
+<tr>
+<td>Dockerfile</td>
+<td>用于创建镜像的脚本</td>
+<td>Dockerfile</td>
+</tr>
+</tbody>
+</table>
+<p>有哪些容器的实现：</p>
+<ul>
+<li>docker<br>Docker公司红遍大江南北的docker容器产品，逐渐发展为容器云平台（提供用于构建、发布和运行分布式应用的平台）</li>
+<li>rocket/rkt<br>专为容器设计的操作系统CoreOS，开发的容器引擎Rocket</li>
+<li>其它<br>OpenVZ/Odin ， Hyper </li>
+</ul>
+<p>安全对比</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>docker</th>
+<th>rkt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>镜像安全</td>
+<td>默认无签名验证，可设置签名验证</td>
+<td>默认强制验证签名</td>
+</tr>
+<tr>
+<td>系统安全</td>
+<td>Namespace隔离性， Cgroups配额资源限制， Capability权限划分，SELinux/AppArmor访问控制权限</td>
+<td>Namespace隔离性， Cgroups配额资源限制，Capability权限划分，SELinux/AppArmor，TPM（Trusted Platform Module）</td>
+</tr>
+<tr>
+<td>运行时容器隔离</td>
+<td>其他方案和厂家提供</td>
+<td>支持KVM虚拟机中运行pod时，基于OS内核级和hypervisor级的隔离，非容器宿主机的cgroups和namespace隔离</td>
+</tr>
+</tbody>
+</table>
+<h2 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h2><h3 id="构建，运行和操作"><a href="#构建，运行和操作" class="headerlink" title="构建，运行和操作"></a>构建，运行和操作</h3><h4 id="Build，Dockerfile文件中的指令详解"><a href="#Build，Dockerfile文件中的指令详解" class="headerlink" title="Build，Dockerfile文件中的指令详解"></a>Build，Dockerfile文件中的指令详解</h4><ul>
+<li>FROM        镜像基准</li>
+<li>RUN        镜像的顶层执行任何命令 ,RUN是在build成镜像时就运行的，先于CMD和ENTRYPOINT的,而RUN只在创建镜像时执行一次</li>
+<li>CMD        启动容器时提供默认命令或参数,会被覆盖</li>
+<li>ENTRYPOINT    容器启动时执行命令,不会对命令覆盖</li>
+<li>LABEL        用于为镜像添加元数据，元数以键值对的形式指定,指定后可以通过docker inspect查看</li>
+<li>EXPOSE    容器在运行时要监听的端口</li>
+<li>ENV    设置环境变量，供 r un ,cmd, ENTRYPOINT 使用</li>
+<li>ADD    <src>拷贝到container的文件系统对应的路径<dest> ,支持上面讲到的<src>是远程URL、自动解压这两个特性</src></dest></src></li>
+<li>COPY    仅拷贝</li>
+<li>VOLUME    挂载点</li>
+<li>USER        RUN指令指定运行用户名或UID</li>
+<li>WORKDIR    设置Dockerfile中的RUN、CMD和ENTRYPOINT指令执行命令的工作目录</li>
+<li>ARG    ENV 的效果一样,不同的是，在将来容器运行时是不会存在这些环境变量的</li>
+<li>ONBUILD  是一个特殊的指令，它后面跟的是其它指令，比如 RUN, COPY 等，而这些指令，在当前镜像构建时并不会被执行。只有当以当前镜像为基础镜像，去构建下一级镜像的时候才会被执行。</li>
+<li>STOPSIGNAL    用于设置停止容器所要发送的系统调用信号</li>
+<li>SHELL    用于设置执行命令（shell式）所使用的的默认shell类型：SHELL在Windows环境下比较有用，Windows下通常会有cmd和powershell两种shell，可能还会有sh。</li>
+</ul>
+<h4 id="容器（生命周期管理）交互的命令"><a href="#容器（生命周期管理）交互的命令" class="headerlink" title="容器（生命周期管理）交互的命令"></a>容器（生命周期管理）交互的命令</h4><ul>
+<li>docker create # 创建一个容器，但不启动它</li>
+<li>docker run # 创建并启动一个容器</li>
+<li>docker stop # 停止容器</li>
+<li>docker start # 启动容器</li>
+<li>docker restart # 重启容器</li>
+<li>docker rm # 删除容器</li>
+<li>docker kill # 给容器发送kill信号</li>
+<li>docker wait # 阻塞直到容器停止为止</li>
+<li>docker exec # 在运行的容器中执行一条命令</li>
+</ul>
+<h4 id="检查容器"><a href="#检查容器" class="headerlink" title="检查容器"></a>检查容器</h4><ul>
+<li>docker ps # 显示运行的容器</li>
+<li>docker inspect # 显示容器信息（包括ip地址）</li>
+<li>docker logs # 获取容器中的日志</li>
+<li>docker events # 获取容器事件</li>
+<li>docker port # 显示容器的公开端口</li>
+<li>docker top # 显示容器中运行的进程</li>
+<li>docker diff # 查看容器文件系统中改变的文件</li>
+<li>docker stats # 查看各种纬度数据、内存、CPU、文件系统等</li>
+</ul>
+<h4 id="更多常用命令"><a href="#更多常用命令" class="headerlink" title="更多常用命令"></a>更多常用命令</h4><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>生命周期管理</td>
+<td>docker [run,start,stop,restart,kill,rm,pause,unpause]</td>
+</tr>
+<tr>
+<td>容器检查操作</td>
+<td>docker [ps,inspect,top,attach,events,logs,wait,export,port]</td>
+</tr>
+<tr>
+<td>容器rootfs命令</td>
+<td>docker [commit,cp,diff]</td>
+</tr>
+<tr>
+<td>镜像仓库</td>
+<td>docker [login,pull,push,search]</td>
+</tr>
+<tr>
+<td>本地镜像管理</td>
+<td>docker [images,rmi,tag,build,history,save,import]</td>
+</tr>
+<tr>
+<td>其他命令</td>
+<td>docker [info,version]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="docker-技术栈发展"><a href="#docker-技术栈发展" class="headerlink" title="docker 技术栈发展"></a>docker 技术栈发展</h3><ul>
+<li>Docker machine，Docker compose，Docker Swarm 三大编排工具并称docker三剑客。<br>Docker Machine - 轻松部署Docker引擎到不同的平台<br>Docker Compose - 定义和运行包含多容器的工具<br>Docker Swarm - 原生集群，目前已经由Swarm mode 代替</li>
+<li>Docker Swarm(过时)<br>独立于Docker engine,需要额外的KV存储,没有服务模型</li>
+<li>Swarmkit(过时)<br>独立的、开源的容器编排,没有服务发现、负载均衡和路由功能</li>
+<li>Swarm mode（当前）<br>集成到了Docker engine中,不需要额外的KV存储,支持服务模型（及task概念）以及相应的扩容缩容、服务发现、滚动升级、路由和负载均衡等。<br>新的Swarm mode 是在docker 1.12版本中集成到 Docker 引擎中的，引入服务的概念，而不是再以容器作为主要管理对象单元，而是以更符合逻辑的服务为单位进行管理和调度提供了众多的新特性，比如：具有容错能力的去中心化设计、内置服务发现、负载均衡、路由网格、动态伸缩、滚动更新、安全传输等。使得Docker 原生的Swarm mode集群具备与Mesos、Kubernetes叫板的实力。</li>
+</ul>
+<h4 id="Swarm-Mode-API"><a href="#Swarm-Mode-API" class="headerlink" title="Swarm Mode API"></a>Swarm Mode API</h4><p>Swarm的API之上，多提供了两类的API：<br>集群管理类：</p>
+<ul>
+<li>init、join、leave</li>
+<li>token</li>
+</ul>
+<p>服务类：</p>
+<ul>
+<li>get/list</li>
+<li>create、delete、update</li>
+<li>inspect、ps</li>
+</ul>
+<h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><p>提供了三级的概念：    </p>
+<ul>
+<li>Service：相同功能的一组容器</li>
+<li>Task：任务调度单元，由Manager生成，同步至Worker</li>
+<li>Container：Task落地</li>
+</ul>
+<p>在Swarm mode里面Service分为两类，一类是有Replicated Service，一类是Global Service。</p>
+<ul>
+<li><p>Replicated Service：</p>
+<pre><code>用户指定副本数
+Reconciled：自动确保副本数
+可附加constraint
+</code></pre></li>
+<li><p>Global Service：</p>
+<pre><code>每个节点有且仅有一个容器
+添加加点时自动扩展
+可附加constraint
+</code></pre></li>
+</ul>
+<h4 id="Routing-Mesh"><a href="#Routing-Mesh" class="headerlink" title="Routing Mesh"></a>Routing Mesh</h4><p>Swarm自带的负载均衡，它取的名字叫做Routing Mesh，Service自带的负载均衡是基于LVS，主要有两种模式：</p>
+<p>VIP模式：每个服务一个VIP，通过LVS实现；服务名解析至VIP；</p>
+<p>DNS模式：服务名解析至容器IP，RoundRobin方式。另外，服务发生变化时，自动调整后端。</p>
+<h4 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h4><p>stack是一组相互关联的服务，它们共享依赖关系，并且可以一起orchestrated(编排)和缩放。<br>Compose使用时，实际上也是在使用堆栈docker stack deploy。    Docker 1.13引入的Docker Compose v3 规范和操作方式。</p>
+<p>功能操作方式对比:</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>Docker Compose v1/v2</th>
+<th>Docker 1.13</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>启动服务</td>
+<td>docker-compose up -d</td>
+<td>docker stack deploy –compose-file=docker-compose.yml ?</td>
+</tr>
+<tr>
+<td>伸缩服务</td>
+<td>docker-compose scale xxx=n</td>
+<td>docker service scale xxx=n</td>
+</tr>
+<tr>
+<td>停止服务</td>
+<td>docker-compose down</td>
+<td>docker stack rm</td>
+</tr>
+<tr>
+<td>跨宿主机</td>
+<td>否</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h4 id="docker常用网络类型"><a href="#docker常用网络类型" class="headerlink" title="docker常用网络类型"></a>docker常用网络类型</h4><ul>
+<li>host 共享Host network namespace，直接使用host的网络资源进行通信</li>
+<li>container 新建容器与一个已有的容器共享network namespace，直接使用host的网络资源进行通信</li>
+<li>none 新建容器有独立的network namespace，但是不会配置任何网络参数</li>
+<li>bridge 新建容器有独立的network namespace</li>
+<li>Overlay 是libnetwork默认的multi-host网络模式，通过VxLAN完成跨主机。</li>
+<li>Flannel k8s的网络,采用L3 Overlay的方式    </li>
+</ul>
+<p>网络更多请参考：<a href="https://www.sdnlab.com/17141.html" target="_blank" rel="noopener">https://www.sdnlab.com/17141.html</a></p>
+<h2 id="微服务容器化需要考虑的问题和方案"><a href="#微服务容器化需要考虑的问题和方案" class="headerlink" title="微服务容器化需要考虑的问题和方案"></a>微服务容器化需要考虑的问题和方案</h2><ul>
+<li>合适的大小<br>镜像可以选择满足需求的操作系统即可，避免安装不必要的包，可以降低镜像的大小，提高持续集成，部署等的效率。</li>
+<li>合适的资源<br>容器分配合适的CPU,内存大小，在这个基础上再分配给应用，满足应用运行的前提下，提高资源利用率。</li>
+<li>镜像的版本规范<br>标准和规范的版本号才能便于使用，如：repo/name：tag </li>
+<li>统一的镜像仓库<br>使用公共的，或者私有的仓库统一进行镜像管理，也便于持续集成的镜像推送，部署时的镜像选择</li>
+<li>日志的收集<br>统一日志格式与文件格式，统一采集上报，docker console 就可以不用输出，一般有：fluentd ，ELK等</li>
+<li>容器的管理<br>容器的日常运维管理一般使用容器管理平台，进行可视化操作</li>
+<li>调用编排<br>建立集群管理资源，调度到合适的资源，自动伸缩和自愈，这个需要容器调用平台，如swarm mode , k8s等。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/08/10/容器化/" title="容器化">https://wewld.com/2018/08/10/容器化/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/09/微服务相关技术/" rel="next" title="微服务框架的不足">
+                <i class="fa fa-chevron-left"></i> 微服务框架的不足
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是容器"><span class="nav-number">1.</span> <span class="nav-text">什么是容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务为什么要容器化"><span class="nav-number">2.</span> <span class="nav-text">微服务为什么要容器化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器介绍"><span class="nav-number">3.</span> <span class="nav-text">容器介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker"><span class="nav-number">4.</span> <span class="nav-text">docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构建，运行和操作"><span class="nav-number">4.1.</span> <span class="nav-text">构建，运行和操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Build，Dockerfile文件中的指令详解"><span class="nav-number">4.1.1.</span> <span class="nav-text">Build，Dockerfile文件中的指令详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器（生命周期管理）交互的命令"><span class="nav-number">4.1.2.</span> <span class="nav-text">容器（生命周期管理）交互的命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#检查容器"><span class="nav-number">4.1.3.</span> <span class="nav-text">检查容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更多常用命令"><span class="nav-number">4.1.4.</span> <span class="nav-text">更多常用命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker-技术栈发展"><span class="nav-number">4.2.</span> <span class="nav-text">docker 技术栈发展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Swarm-Mode-API"><span class="nav-number">4.2.1.</span> <span class="nav-text">Swarm Mode API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Service"><span class="nav-number">4.2.2.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Routing-Mesh"><span class="nav-number">4.2.3.</span> <span class="nav-text">Routing Mesh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Stack"><span class="nav-number">4.2.4.</span> <span class="nav-text">Stack</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker常用网络类型"><span class="nav-number">4.2.5.</span> <span class="nav-text">docker常用网络类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务容器化需要考虑的问题和方案"><span class="nav-number">5.</span> <span class="nav-text">微服务容器化需要考虑的问题和方案</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
