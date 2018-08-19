@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="We Wld">
 <meta property="og:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-08T23:14:51.687Z">
+<meta property="og:updated_time" content="2018-08-19T21:52:18.849Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微服务框架相关技术">
 <meta name="twitter:description" content="接下来对微服务相关技术做一个整理，并输出一个实践项目。如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。这篇主要讲微服务框架，其中主要以Spring Cloud框架进行展开或举例，因为Spring Cloud作为微服务一个可行的落地方案，不仅服务治理功能齐全，也是目前的最佳实践之一。 首先，微服务之间要相互调用，那就从远程调用开始说">
@@ -772,7 +772,7 @@ MaxAutoRetries：对当前实例的重试次数
 </code></pre></li>
 </ul>
 <h4 id="限流"><a href="#限流" class="headerlink" title="限流:"></a>限流:</h4><ul>
-<li>因为一切系统皆有瓶颈，所以首先要保证可以活下来</li>
+<li>因为一切系统皆有瓶颈，所以首先要保证可以活下来。<br>服务进入的流量大小一般小于出口依赖服务的能力，大于则调用超时或者异常；多个调用则以最小的能力 为准；进入时和 出口的服务端流入时，  一般需要做限流；假如调用方 ，服务提供方数量会变化，那么 ，这种流量需要通过分布式限流来控制更准确；服务的调用方往往有多个，所以，服务端需要更精确的限流策略来分配流量。</li>
 </ul>
 <h5 id="限流算法："><a href="#限流算法：" class="headerlink" title="限流算法："></a>限流算法：</h5><ul>
 <li><p>固定、滑动时间窗口限流算法</p>
@@ -786,7 +786,7 @@ MaxAutoRetries：对当前实例的重试次数
 </ul>
 <h5 id="限流规则配置"><a href="#限流规则配置" class="headerlink" title="限流规则配置"></a>限流规则配置</h5><p>时间粒度<br>接口粒度<br>最大限流值</p>
 <h5 id="服务自身限流："><a href="#服务自身限流：" class="headerlink" title="服务自身限流："></a>服务自身限流：</h5><p>首先要保护自己，那么就要保证接入的流量在该应用-服务的最大tps，qps之内。一般采用单机限流算法就可以。</p>
-<h5 id="服务网关限流"><a href="#服务网关限流" class="headerlink" title="服务网关限流"></a>服务网关限流</h5><p>外部过来的请求，因为网关多实例集群，一般采用分布式限流策略。</p>
+<h5 id="服务网关限流"><a href="#服务网关限流" class="headerlink" title="服务网关限流"></a>服务网关限流</h5><p>外部过来的请求，因为网关多实例集群（因为网关实例也会发生变化），一般采用分布式限流策略。</p>
 <h5 id="Reactive-Stream限流："><a href="#Reactive-Stream限流：" class="headerlink" title="Reactive Stream限流："></a>Reactive Stream限流：</h5><p>关于回压式流，可以参考上一篇“反应式”的文章。</p>
 <h3 id="服务网关"><a href="#服务网关" class="headerlink" title="服务网关"></a>服务网关</h3><p>微服务的统一入口,是外部请求和内部微服务之间的桥梁。主要功能包括：  </p>
 <ul>

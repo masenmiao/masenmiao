@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="We Wld">
 <meta property="og:description" content="如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。 微服务框架的不足上一篇文章主要对服务框架的相关技术做了整理，也输出了一个Spring Cloud的微服务框架实践。其中，也发现了一些问题和不足，接下来讨论下目前微服务框架的不足和对应的优化方案，主要以Spring Cloud为主进行说明     多语言支持企业里的应用可能是由多种编">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-11T02:17:49.994Z">
+<meta property="og:updated_time" content="2018-08-19T21:48:17.298Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微服务框架的不足">
 <meta name="twitter:description" content="如果从服务构建到生产运营，包括的技术有：微服务框架，容器化，持续集成与发布，资源调度与服务编排，监控等一些大的范围。 微服务框架的不足上一篇文章主要对服务框架的相关技术做了整理，也输出了一个Spring Cloud的微服务框架实践。其中，也发现了一些问题和不足，接下来讨论下目前微服务框架的不足和对应的优化方案，主要以Spring Cloud为主进行说明     多语言支持企业里的应用可能是由多种编">
@@ -327,26 +327,21 @@
 <li>使用 Service Mesh 服务网格框架，为每个应用创建一个独立的代理，由代理完成服务治理的工作。</li>
 </ol>
 <h3 id="面向业务"><a href="#面向业务" class="headerlink" title="面向业务"></a>面向业务</h3><p>上一篇讲了微服务框架的技术，实际上这么多技术就是为了解决服务治理的工作，如果业务开发人员要清楚这么多细节，那么可能需要很长一段时间。<br>所以，需要做到让业务开发人员专注于业务，降低开发门槛，提高微服务的开发效率是框架必须要做到的。</p>
-<ul>
-<li><p>SDK<br>SDK就是传统直接依赖代码的方式，好处是灵活，并且容易自主可控。如果是非多语言环境，目前还是最好的选择。<br>但是，应用端耦合了SDK，微服务框架目前发展变化快，所以应用端需要关注更多的服务治理相关的内容。其次，SDK依赖随着功能的增加也越来越大，会增加构建，部署，启动的时间。<br>当然，这种方式仍有很多优化空间，并且是一种可行的实践方式。</p>
-</li>
-<li><p>Service Mesh<br>A service mesh is a dedicated infrastructure layer for handling service-to-service communication. Consists of a control plane and data plane (service proxies act as “mesh”). - William Morgan, What’s a Service Mesh? And Why Do I Need One? </p>
-</li>
-</ul>
+<h4 id="SDK"><a href="#SDK" class="headerlink" title="SDK"></a>SDK</h4><p>SDK就是传统直接依赖代码的方式，好处是灵活，并且容易自主可控。如果是非多语言环境，目前还是最好的选择。<br>但是，应用端耦合了SDK，微服务框架目前发展变化快，所以应用端需要关注更多的服务治理相关的内容。其次，SDK依赖随着功能的增加也越来越大，会增加构建，部署，启动的时间。<br>当然，这种方式仍有很多优化空间，并且是一种可行的实践方式。</p>
+<h4 id="Service-Mesh"><a href="#Service-Mesh" class="headerlink" title="Service Mesh"></a>Service Mesh</h4><p>A service mesh is a dedicated infrastructure layer for handling service-to-service communication. Consists of a control plane and data plane (service proxies act as “mesh”). - William Morgan, What’s a Service Mesh? And Why Do I Need One? </p>
 <p>服务网格也是微服务发展的一个产物，可以把服务治理的工作放在一个单独的Proxy上，让业务模块小且专注。解决了微服务技术门槛高,多语言支持不足,代码侵入性强的问题。目前的服务网格框架有：<br>Linkerd、Envoy、Istio、NGINX Application Platform、Conduit…<br>最近，Istio发布了1.0版本，这也许意味着微服务开始进入2.0时代。<br>如果使用Service Mesh，那么可能将需要引入容器，服务调度K8s平台等做微服务体系相关的支持。</p>
-<ul>
-<li>FAAS 面向函数<br>把业务单元拆的更彻底，只需要面对业务逻辑方法，然后在FAAS平台上部署。更不需要关注云环境和运行时资源，可以根据服务请求量和运行态动态伸缩底层资源。<br>这是一种更理想的情况，带来运行成本更低，自动扩缩容，事件驱动等特性，目前AWS， 阿里云等也在快速布局和发展。<br>可能需要关注的问题是：    </li>
-</ul>
+<h4 id="FAAS-面向函数"><a href="#FAAS-面向函数" class="headerlink" title="FAAS 面向函数"></a>FAAS 面向函数</h4><p>把业务单元拆的更彻底，只需要面对业务逻辑方法，然后在FAAS平台上部署。更不需要关注云环境和运行时资源，可以根据服务请求量和运行态动态伸缩底层资源。<br>这是一种更理想的情况，带来运行成本更低，自动扩缩容，事件驱动等特性，目前AWS， 阿里云等也在快速布局和发展。<br>可能需要关注的问题是：    </p>
 <ol>
 <li>利用冷启动实现的资源的按需分配，如果是java启动速度需要关注</li>
 <li>资源的掌控是不够，特殊应用需要特殊配置</li>
 <li>函数之间的调用和管理</li>
 </ol>
 <p>Spring Cloud　Finchley 版本提供了　Spring Cloud Function模块对面向函数提供了支持。    </p>
-<h3 id="服务治理动态调整"><a href="#服务治理动态调整" class="headerlink" title="服务治理动态调整"></a>服务治理动态调整</h3><p>根据微服务的运行时指标监控，可以动态控制服务治理，主动及时做出变化，提高可用性，如调整服务调用时的负载均衡，限流，熔断等的策略和配置等。</p>
+<h3 id="服务治理动态调整"><a href="#服务治理动态调整" class="headerlink" title="服务治理动态调整"></a>服务治理动态调整</h3><p>微服务对外限流降级，对内调用负载均衡，熔断降级，那么，根据每个微服务的运行时指标监控，还可以动态控制调整服务治理，主动及时做出变化。</p>
 <ul>
-<li>负载均衡<br>根据服务运行指标，将不可用服务剔除，动态调整权重等。</li>
-<li>限流，熔断<br>根据服务运行指标，如服务数量变化进行限流额度调整，主动熔断与恢复等。    </li>
+<li>负载均衡<br>根据服务调用的指标，将不正常服务剔除，或根据RT，超时等自动调整权重等。</li>
+<li>限流<br>根据服务自身的指标，和RT时间等，动态调整限流的量，来更好的保护服务和保证RT响应时间；<br>服务的调用方往往有多个，所以，服务端需要更精确的限流来分配流量；<br>根据依赖服务的能力，动态的分配这个能力给调用方做限流。    </li>
+<li>熔断<br>调用时的熔断与恢复，也可以根据服务方的指标来做动态的调整，这要比尝试一定次数更好些。</li>
 </ul>
 <p>当然，配合指标监控，服务治理可以优化的空间还很多。</p>
 <h3 id="微服务其它相关技术支撑"><a href="#微服务其它相关技术支撑" class="headerlink" title="微服务其它相关技术支撑"></a>微服务其它相关技术支撑</h3><h4 id="标准构建物-容器镜像"><a href="#标准构建物-容器镜像" class="headerlink" title="标准构建物-容器镜像"></a>标准构建物-容器镜像</h4><p>Docker提供了应用标准化的构建和运行的能力</p>
@@ -578,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务框架的不足"><span class="nav-number">1.</span> <span class="nav-text">微服务框架的不足</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多语言支持"><span class="nav-number">1.1.</span> <span class="nav-text">多语言支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#面向业务"><span class="nav-number">1.2.</span> <span class="nav-text">面向业务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务治理动态调整"><span class="nav-number">1.3.</span> <span class="nav-text">服务治理动态调整</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务其它相关技术支撑"><span class="nav-number">1.4.</span> <span class="nav-text">微服务其它相关技术支撑</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标准构建物-容器镜像"><span class="nav-number">1.4.1.</span> <span class="nav-text">标准构建物-容器镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#持续集成与发布"><span class="nav-number">1.4.2.</span> <span class="nav-text">持续集成与发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#资源管理与调度编排"><span class="nav-number">1.4.3.</span> <span class="nav-text">资源管理与调度编排</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#资源管理"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">资源管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#调度编排"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">调度编排</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#基础服务抽象"><span class="nav-number">1.4.3.3.</span> <span class="nav-text">基础服务抽象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动伸缩，自愈"><span class="nav-number">1.4.3.4.</span> <span class="nav-text">自动伸缩，自愈</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控"><span class="nav-number">1.4.4.</span> <span class="nav-text">监控</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务框架的不足"><span class="nav-number">1.</span> <span class="nav-text">微服务框架的不足</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多语言支持"><span class="nav-number">1.1.</span> <span class="nav-text">多语言支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#面向业务"><span class="nav-number">1.2.</span> <span class="nav-text">面向业务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SDK"><span class="nav-number">1.2.1.</span> <span class="nav-text">SDK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Service-Mesh"><span class="nav-number">1.2.2.</span> <span class="nav-text">Service Mesh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FAAS-面向函数"><span class="nav-number">1.2.3.</span> <span class="nav-text">FAAS 面向函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务治理动态调整"><span class="nav-number">1.3.</span> <span class="nav-text">服务治理动态调整</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务其它相关技术支撑"><span class="nav-number">1.4.</span> <span class="nav-text">微服务其它相关技术支撑</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标准构建物-容器镜像"><span class="nav-number">1.4.1.</span> <span class="nav-text">标准构建物-容器镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#持续集成与发布"><span class="nav-number">1.4.2.</span> <span class="nav-text">持续集成与发布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#资源管理与调度编排"><span class="nav-number">1.4.3.</span> <span class="nav-text">资源管理与调度编排</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#资源管理"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">资源管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#调度编排"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">调度编排</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#基础服务抽象"><span class="nav-number">1.4.3.3.</span> <span class="nav-text">基础服务抽象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动伸缩，自愈"><span class="nav-number">1.4.3.4.</span> <span class="nav-text">自动伸缩，自愈</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控"><span class="nav-number">1.4.4.</span> <span class="nav-text">监控</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
