@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="持续集成CI ，Continuos Integration，持续集成。 什么是持续集成每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。    持续集成发展历程： 手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署 CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布">
+<meta property="og:type" content="article">
+<meta property="og:title" content="持续集成与部署">
+<meta property="og:url" content="https://wewld.com/2018/08/12/持续集成与部署/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="持续集成CI ，Continuos Integration，持续集成。 什么是持续集成每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。    持续集成发展历程： 手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署 CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-27T00:11:22.372Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="持续集成与部署">
+<meta name="twitter:description" content="持续集成CI ，Continuos Integration，持续集成。 什么是持续集成每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。    持续集成发展历程： 手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署 CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/08/12/持续集成与部署/"/>
+
+
+
+
+
+  <title>持续集成与部署 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/08/12/持续集成与部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">持续集成与部署</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-12T16:46:29+08:00">
+                2018-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="持续集成"><a href="#持续集成" class="headerlink" title="持续集成"></a>持续集成</h2><p>CI ，Continuos Integration，持续集成。</p>
+<h3 id="什么是持续集成"><a href="#什么是持续集成" class="headerlink" title="什么是持续集成"></a>什么是持续集成</h3><p>每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。   </p>
+<h3 id="持续集成发展历程："><a href="#持续集成发展历程：" class="headerlink" title="持续集成发展历程："></a>持续集成发展历程：</h3><ul>
+<li>手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署</li>
+<li>CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布</li>
+<li>自动化： CI 工具 对接代码仓库，提交后使用钩子自动触发CI构建，实现自动化构建</li>
+<li>分布式： CI 应对大量的任务，支持分布式构建和独立的构建环境，如 jenkins 的slave</li>
+<li>工作流： CI 工具支持 pipeline工作流，可以更灵活的编排CI到CD的每一个步骤</li>
+<li>云原生： 更好的抽象，来集成对接更多CI工具 和 各种云平台进行集群管理和部署策略的应用。如 持续交付工具Spinnaker</li>
+<li>DevOps： 一站式打通开发到运维的每一个步骤</li>
+</ul>
+<h3 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h3><p>持续：每一次变化触发持续集成，并获得反馈<br>集成：代码功能集成到一起，编译测试打包，并触发集成分支的CI流程，比如进行自动化集成测试<br>交付：部署到相应环境，交付给质量人员进行验证<br>部署：软件的部署，在持续部署中特指部署到线上生产环境<br>发布：功能变化对最终用户可见 </p>
+<h3 id="持续集成做的事情或步骤"><a href="#持续集成做的事情或步骤" class="headerlink" title="持续集成做的事情或步骤"></a>持续集成做的事情或步骤</h3><p>持续集成的一般步骤，或可选步骤行为如下</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编码</td>
+<td>选择合适的分支，进行代码和单元测试的coding</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>编译，静态代码，代码规范检测，单元测试，测试覆盖率，打包, 镜像构建与上传。主要由构建工具支持如maven , gradle. </td>
+</tr>
+<tr>
+<td>测试</td>
+<td>集成测试：自动部署到对应的环境，触发执行集成测试案例，一般是对外层接口编写的自动化测试案例<br> 其它测试还有：端到端的自动化测试，性能测试，系统/人工测试，灰度测试等<br> 因为需要部署到各种环境进行验证，所以，到这个过程也叫做持续交付</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>通过测试，与代码审核后的版本，手工或自动部署到线上环境</td>
+</tr>
+<tr>
+<td>发布</td>
+<td>功能变化对最终用户可见，如灰度策略验证后的全量放开</td>
+</tr>
+</tbody>
+</table>
+<h3 id="玩法"><a href="#玩法" class="headerlink" title="玩法"></a>玩法</h3><p>一般CICD的具体步骤设置是对应代码分支的，所以可以为不同分支创建相匹配的流水线，比如特性分支仅做代码的构建。集成分支需要增加部署到集成测试环境，进行集成测试等。   </p>
+<h4 id="分支的流水线"><a href="#分支的流水线" class="headerlink" title="分支的流水线"></a>分支的流水线</h4><p>每条不同的分支都应该有与其作用相匹配的一条流水线来为它服务。</p>
+<ul>
+<li><p>特性分支<br>用于日常需求隔离开发，提交后一般只进行代码的构建流程</p>
+</li>
+<li><p>集成或发布分支<br>用于不同特性分支代码的集成，冲突的解决，在集成分支上构建部署集成测试环境，进行自动化集成测试；或部署预生产环境进行回归测试；版本验证通过后，经过安全检测，代码评审等，最后经人工确认或自动发布，部署到生产线上环境。<br>最后，用该分支归并到主干分支。</p>
+</li>
+</ul>
+<h4 id="分支的玩法一般有这样几种："><a href="#分支的玩法一般有这样几种：" class="headerlink" title="分支的玩法一般有这样几种："></a>分支的玩法一般有这样几种：</h4><ul>
+<li><p>自由模式<br>主干或者分支进行特性开发，或集成与发布</p>
+</li>
+<li><p>git-flow模式(推荐)<br>master,develop模式，增加develop（dev）集成分支作为长期分支，所有的用户都在dev分支上开发，或建立特性分支进行开发，之后合并到dev分支并解决冲突，进入之前需要保证dev分支的质量，一般需要code review, dev分支集成测试与发布后，dev归并到master分支</p>
+</li>
+<li><p>分支模式<br>集成与发布也需要创建独立的release分支，选择归并需要的特性分支到release分支，然后进行集成和发布；版本上线后，release分支归并到主干分支</p>
+</li>
+</ul>
+<h4 id="一般有哪些环境："><a href="#一般有哪些环境：" class="headerlink" title="一般有哪些环境："></a>一般有哪些环境：</h4><ul>
+<li><p>本地开发环境 ： 自己的机器</p>
+</li>
+<li><p>集成开发环境 ： 微服务所有依赖的服务，系统在这个环境均有部署，供开发之间进行联调的日常环境</p>
+</li>
+<li><p>系统测试环境 ： 供质量测试人员使用的测试环境</p>
+</li>
+<li><p>性能测试环境 ： 用于压力测试的环境</p>
+</li>
+<li><p>预发生产环境 ： 所有系统在预发环境部署，配置项和数据与生产保持一致，预发往往与生产环境共享数据库，用真实的数据进行回归测试</p>
+</li>
+<li><p>线上生产环境 ： 最终部署到正式的用户环境，也可以经过灰度发布验证，再全量开放</p>
+</li>
+</ul>
+<h3 id="持续集成工具"><a href="#持续集成工具" class="headerlink" title="持续集成工具:"></a>持续集成工具:</h3><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>安装使用</th>
+<th>VersionControl</th>
+<th>Pipeline</th>
+<th>原生容器</th>
+<th>集成云平台</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jenkins</td>
+<td>master-slave,自建</td>
+<td>插件均支持</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>Drone</td>
+<td>本地安装</td>
+<td>Github, Gitlab等</td>
+<td>drone.yml</td>
+<td>原生支持docker,每一个阶段在指定的image docker container下执行，支持service等</td>
+<td>插件支持</td>
+</tr>
+<tr>
+<td>Gitlab CI</td>
+<td>托管，或自建</td>
+<td>Gitlab</td>
+<td>.gitlab-ci.yml</td>
+<td>不支持</td>
+<td>支持K8s</td>
+</tr>
+<tr>
+<td>Spinnaker</td>
+<td>开源，自建</td>
+<td>需集成CI工具</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>Crcle CI</td>
+<td>托管，免费和付费</td>
+<td>Github</td>
+<td>yml</td>
+<td>支持</td>
+<td>部分支持</td>
+</tr>
+</tbody>
+</table>
+<p>其它工具： </p>
+<ul>
+<li>Travis 最老的托管解决方案之一，成熟的解决方案，提供托管和本地变种</li>
+<li>Bamboo 本地的持续集成和部署工具，云端解决方案Bitbucket pipeline。</li>
+<li>CodeShip近期也推出了Jet，这是一个对Docker应用进行测试与部署</li>
+<li>Piplin是一款免费、开源的持续集成与部署系统</li>
+<li>Codeship是一个强大的带有Docker支持的本地持续集成解决方案</li>
+<li>Codefresh是一个支持Docker的持续集成工具，它可以发布和建立本地环境的Docker镜像。   </li>
+<li>Go CD  等</li>
+</ul>
+<!--  
+Chaos Monkey
+ -->
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>上面总结了持续集成，也包括了持续交付delivery , 下面就说说线上部署deploy的事情</p>
+<h3 id="部署的方式"><a href="#部署的方式" class="headerlink" title="部署的方式"></a>部署的方式</h3><ul>
+<li><p>滚动<br>逐个进行服务器版本更新，一般可以设置间隔时间<br>缺点：新版本没有充分验证</p>
+</li>
+<li><p>蓝绿<br>部署新版本，老版本同时在线，切换流量到新版本，验证通过删除老版本，反之则回滚切换流量到老版本<br>缺点：资源浪费</p>
+</li>
+<li><p>灰度（金丝雀）<br>部署1台新版本，通过负载均衡权重设置，或灰度功能配置，让小部分权重的流量或指定规则的用户路由到新版本，验证通过，再更新剩下的服务器，反之则回滚</p>
+</li>
+</ul>
+<h3 id="部署依赖的工具"><a href="#部署依赖的工具" class="headerlink" title="部署依赖的工具"></a>部署依赖的工具</h3><h4 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a>资源管理</h4><p>首先，部署应用/服务，我们需要有机器资源，物理机，虚拟机，还是云主机，并对它们进行管理 :<br>给服务所在环境分配机器，把这些机器管理起来形成一个集群，并监控机器的状态，当应用需要部署资源时从这个集群中分配</p>
+<h4 id="资源调用"><a href="#资源调用" class="headerlink" title="资源调用"></a>资源调用</h4><p>然后，就可以部署/调度我们的应用/服务 ：<br>服务部署或弹性伸缩时，把服务部署到集群合适的资源上，并对这些服务进行管理和监控    </p>
+<h5 id="部署-调度"><a href="#部署-调度" class="headerlink" title="部署/调度"></a>部署/调度</h5><p>容器云平台提供了资源集群管理，调度编排工具，如Swarm mode ,k8s，可以对服务进行资源调度。</p>
+<h5 id="编排"><a href="#编排" class="headerlink" title="编排"></a>编排</h5><p>有依赖关系的多服务的调度工具，如swarm mode ,k8s 提供的编排yml文件来定义服务部署的依赖和先后条件等。    </p>
+<p>k8s调度与编排，提供了命令工具，和Console控制台页面功能，可以方便的进行服务的部署，和服务的运行时管理，以及监控。</p>
+<h5 id="其它部署工具"><a href="#其它部署工具" class="headerlink" title="其它部署工具"></a>其它部署工具</h5><ul>
+<li>CD 持续交付工具<br>spinnaker<br>更好的抽象，支持集成多种CI平台<br>支持集群多种云平台进行CD，在界面上进行蓝绿发布，金丝雀发布等策略的配置，自动化发布，能够更容易的进行回滚，和扩容。<br>对接K8s的容器云平台，也可以轻松的实现服务的弹性伸缩</li>
+</ul>
+<!-- 
+## 自动化
+
+## DevOps
+加速软件开发，减少软件开发到交付或上线的时间，并使开发、测试、运维几个角色协作的更紧密。
+DevOps  s(Operations), Dev (Development) 
+需求 --------上线
+
+## 云原生
+-->
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/08/12/持续集成与部署/" title="持续集成与部署">https://wewld.com/2018/08/12/持续集成与部署/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/10/容器化/" rel="next" title="容器化">
+                <i class="fa fa-chevron-left"></i> 容器化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#持续集成"><span class="nav-number">1.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是持续集成"><span class="nav-number">1.1.</span> <span class="nav-text">什么是持续集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成发展历程："><span class="nav-number">1.2.</span> <span class="nav-text">持续集成发展历程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#名词解释"><span class="nav-number">1.3.</span> <span class="nav-text">名词解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成做的事情或步骤"><span class="nav-number">1.4.</span> <span class="nav-text">持续集成做的事情或步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#玩法"><span class="nav-number">1.5.</span> <span class="nav-text">玩法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分支的流水线"><span class="nav-number">1.5.1.</span> <span class="nav-text">分支的流水线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分支的玩法一般有这样几种："><span class="nav-number">1.5.2.</span> <span class="nav-text">分支的玩法一般有这样几种：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一般有哪些环境："><span class="nav-number">1.5.3.</span> <span class="nav-text">一般有哪些环境：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成工具"><span class="nav-number">1.6.</span> <span class="nav-text">持续集成工具:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署"><span class="nav-number">2.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署的方式"><span class="nav-number">2.1.</span> <span class="nav-text">部署的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署依赖的工具"><span class="nav-number">2.2.</span> <span class="nav-text">部署依赖的工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#资源管理"><span class="nav-number">2.2.1.</span> <span class="nav-text">资源管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#资源调用"><span class="nav-number">2.2.2.</span> <span class="nav-text">资源调用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#部署-调度"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">部署/调度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编排"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">编排</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其它部署工具"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">其它部署工具</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
