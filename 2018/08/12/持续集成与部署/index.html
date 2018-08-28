@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="We Wld">
 <meta property="og:description" content="持续集成CI ，Continuos Integration，持续集成。 什么是持续集成每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。    持续集成发展历程： 手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署 CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-27T00:11:22.372Z">
+<meta property="og:updated_time" content="2018-08-27T22:10:45.391Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="持续集成与部署">
 <meta name="twitter:description" content="持续集成CI ，Continuos Integration，持续集成。 什么是持续集成每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。    持续集成发展历程： 手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署 CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布">
@@ -390,7 +390,7 @@
 <th>VersionControl</th>
 <th>Pipeline</th>
 <th>原生容器</th>
-<th>集成云平台</th>
+<th>集成容器云平台</th>
 </tr>
 </thead>
 <tbody>
@@ -449,7 +449,7 @@
 <!--  
 Chaos Monkey
  -->
-<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>上面总结了持续集成，也包括了持续交付delivery , 下面就说说线上部署deploy的事情</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>上面总结了持续集成，也包括了持续交付delivery , 下面就说说部署deploy的事情</p>
 <h3 id="部署的方式"><a href="#部署的方式" class="headerlink" title="部署的方式"></a>部署的方式</h3><ul>
 <li><p>滚动<br>逐个进行服务器版本更新，一般可以设置间隔时间<br>缺点：新版本没有充分验证</p>
 </li>
@@ -458,24 +458,23 @@ Chaos Monkey
 <li><p>灰度（金丝雀）<br>部署1台新版本，通过负载均衡权重设置，或灰度功能配置，让小部分权重的流量或指定规则的用户路由到新版本，验证通过，再更新剩下的服务器，反之则回滚</p>
 </li>
 </ul>
-<h3 id="部署依赖的工具"><a href="#部署依赖的工具" class="headerlink" title="部署依赖的工具"></a>部署依赖的工具</h3><h4 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a>资源管理</h4><p>首先，部署应用/服务，我们需要有机器资源，物理机，虚拟机，还是云主机，并对它们进行管理 :<br>给服务所在环境分配机器，把这些机器管理起来形成一个集群，并监控机器的状态，当应用需要部署资源时从这个集群中分配</p>
-<h4 id="资源调用"><a href="#资源调用" class="headerlink" title="资源调用"></a>资源调用</h4><p>然后，就可以部署/调度我们的应用/服务 ：<br>服务部署或弹性伸缩时，把服务部署到集群合适的资源上，并对这些服务进行管理和监控    </p>
-<h5 id="部署-调度"><a href="#部署-调度" class="headerlink" title="部署/调度"></a>部署/调度</h5><p>容器云平台提供了资源集群管理，调度编排工具，如Swarm mode ,k8s，可以对服务进行资源调度。</p>
-<h5 id="编排"><a href="#编排" class="headerlink" title="编排"></a>编排</h5><p>有依赖关系的多服务的调度工具，如swarm mode ,k8s 提供的编排yml文件来定义服务部署的依赖和先后条件等。    </p>
-<p>k8s调度与编排，提供了命令工具，和Console控制台页面功能，可以方便的进行服务的部署，和服务的运行时管理，以及监控。</p>
-<h5 id="其它部署工具"><a href="#其它部署工具" class="headerlink" title="其它部署工具"></a>其它部署工具</h5><ul>
-<li>CD 持续交付工具<br>spinnaker<br>更好的抽象，支持集成多种CI平台<br>支持集群多种云平台进行CD，在界面上进行蓝绿发布，金丝雀发布等策略的配置，自动化发布，能够更容易的进行回滚，和扩容。<br>对接K8s的容器云平台，也可以轻松的实现服务的弹性伸缩</li>
+<h3 id="部署依赖的功能平台"><a href="#部署依赖的功能平台" class="headerlink" title="部署依赖的功能平台"></a>部署依赖的功能平台</h3><p>平台，需要管理云上的机器，和应用服务（容器实例），所以，基于这些功能，就简称他容器云平台好了。部署一个服务，平台最基本需要的功能具体如下：</p>
+<h4 id="资源-集群管理"><a href="#资源-集群管理" class="headerlink" title="资源/集群管理"></a>资源/集群管理</h4><p>首先，部署应用/服务，我们需要有机器资源，物理机，虚拟机，还是云主机，并对它们进行管理 :<br>给服务所在环境分配机器，把这些机器管理起来形成一个集群，并监控机器的状态，当应用需要部署资源时从这个集群中分配</p>
+<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h4><p>然后，就可以部署/调度我们的应用/服务 ：<br>服务部署或弹性伸缩时，把服务部署到集群合适的资源上</p>
+<h4 id="编排"><a href="#编排" class="headerlink" title="编排"></a>编排</h4><p>编排也有调度的意思，这里特指将单个服务，或有依赖关系的多个服务进行yml文件配置，编排工具按照描述的配置，先后关系，依次调度到指定标签或合适的资源上，创建和管理这些容器/服务   </p>
+<h4 id="弹性伸缩"><a href="#弹性伸缩" class="headerlink" title="弹性伸缩"></a>弹性伸缩</h4><p>根据autoscale配置的服务运行时状态，动态调整服务的数量</p>
+<h4 id="容器云平台-调度工具有哪些："><a href="#容器云平台-调度工具有哪些：" class="headerlink" title="容器云平台/调度工具有哪些："></a>容器云平台/调度工具有哪些：</h4><ul>
+<li>Swarm mode<br>Docker开发的集群调度框架，上一篇“容器化”也介绍过，易于集成和设置，适合中小规模集群</li>
+<li>Kubernetes<br>目前最流行的容器调度平台，通用，开源，适合千节点集群</li>
+<li>Mesos<br>Apache Mesos 分布式资源调度管理，Marathon 服务管理，适合大型系统，万节点集群</li>
 </ul>
-<!-- 
-## 自动化
+<h3 id="集成云平台（调度）工具"><a href="#集成云平台（调度）工具" class="headerlink" title="集成云平台（调度）工具"></a>集成云平台（调度）工具</h3><ul>
+<li>spinnaker  CD 持续交付工具<br>更好的抽象，支持集成多种CI平台<br>支持集群多种云平台进行CD，可以对接k8s，提供在页面上进行蓝绿发布，金丝雀发布等策略的配置，自动化发布，能够更容易的进行回滚，和扩容，也可以轻松的实现服务的弹性伸缩</li>
+<li>Gitlab CI<br>GitLab CI提供持续集成服务，可以使用托管服务或自建。也支持集成k8s来做持续交付，部署</li>
+</ul>
+<h2 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h2><p>从CI到CD，从一次代码提交开始，触发流水线步骤执行，每一步都可以是自动化执行的，包括最终的版本部署，出现问题时的自动回滚。当然，有些步骤也需要人工确认，如代码评审，系统测试通过确认等行为，确认后才会触发自动化下一步的流程，(当然这些是自己定义的)。那么就需要有一个平台来集成CI到CD的整个过程</p>
+<h2 id="DevOps"><a href="#DevOps" class="headerlink" title="DevOps"></a>DevOps</h2><p>这个平台，不仅仅可以做CI，CD的事情，它可以面向DevOps，Development - Operations 开发到运维的整个生命周期，通过一个平台来管理：项目需求，代码，应用，CI，CD，测试，上线，运营的整个过程，包括执行信息的反馈。加速软件开发，减少软件开发到交付或上线的时间，并使开发、测试、运维几个角色协作的更紧密。</p>
 
-## DevOps
-加速软件开发，减少软件开发到交付或上线的时间，并使开发、测试、运维几个角色协作的更紧密。
-DevOps  s(Operations), Dev (Development) 
-需求 --------上线
-
-## 云原生
--->
       
     </div>
     
@@ -693,7 +692,7 @@ DevOps  s(Operations), Dev (Development)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#持续集成"><span class="nav-number">1.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是持续集成"><span class="nav-number">1.1.</span> <span class="nav-text">什么是持续集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成发展历程："><span class="nav-number">1.2.</span> <span class="nav-text">持续集成发展历程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#名词解释"><span class="nav-number">1.3.</span> <span class="nav-text">名词解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成做的事情或步骤"><span class="nav-number">1.4.</span> <span class="nav-text">持续集成做的事情或步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#玩法"><span class="nav-number">1.5.</span> <span class="nav-text">玩法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分支的流水线"><span class="nav-number">1.5.1.</span> <span class="nav-text">分支的流水线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分支的玩法一般有这样几种："><span class="nav-number">1.5.2.</span> <span class="nav-text">分支的玩法一般有这样几种：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一般有哪些环境："><span class="nav-number">1.5.3.</span> <span class="nav-text">一般有哪些环境：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成工具"><span class="nav-number">1.6.</span> <span class="nav-text">持续集成工具:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署"><span class="nav-number">2.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署的方式"><span class="nav-number">2.1.</span> <span class="nav-text">部署的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署依赖的工具"><span class="nav-number">2.2.</span> <span class="nav-text">部署依赖的工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#资源管理"><span class="nav-number">2.2.1.</span> <span class="nav-text">资源管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#资源调用"><span class="nav-number">2.2.2.</span> <span class="nav-text">资源调用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#部署-调度"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">部署/调度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编排"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">编排</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其它部署工具"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">其它部署工具</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#持续集成"><span class="nav-number">1.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是持续集成"><span class="nav-number">1.1.</span> <span class="nav-text">什么是持续集成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成发展历程："><span class="nav-number">1.2.</span> <span class="nav-text">持续集成发展历程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#名词解释"><span class="nav-number">1.3.</span> <span class="nav-text">名词解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成做的事情或步骤"><span class="nav-number">1.4.</span> <span class="nav-text">持续集成做的事情或步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#玩法"><span class="nav-number">1.5.</span> <span class="nav-text">玩法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分支的流水线"><span class="nav-number">1.5.1.</span> <span class="nav-text">分支的流水线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分支的玩法一般有这样几种："><span class="nav-number">1.5.2.</span> <span class="nav-text">分支的玩法一般有这样几种：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一般有哪些环境："><span class="nav-number">1.5.3.</span> <span class="nav-text">一般有哪些环境：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持续集成工具"><span class="nav-number">1.6.</span> <span class="nav-text">持续集成工具:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署"><span class="nav-number">2.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署的方式"><span class="nav-number">2.1.</span> <span class="nav-text">部署的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署依赖的功能平台"><span class="nav-number">2.2.</span> <span class="nav-text">部署依赖的功能平台</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#资源-集群管理"><span class="nav-number">2.2.1.</span> <span class="nav-text">资源/集群管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调用"><span class="nav-number">2.2.2.</span> <span class="nav-text">调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编排"><span class="nav-number">2.2.3.</span> <span class="nav-text">编排</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#弹性伸缩"><span class="nav-number">2.2.4.</span> <span class="nav-text">弹性伸缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容器云平台-调度工具有哪些："><span class="nav-number">2.2.5.</span> <span class="nav-text">容器云平台/调度工具有哪些：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成云平台（调度）工具"><span class="nav-number">2.3.</span> <span class="nav-text">集成云平台（调度）工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动化"><span class="nav-number">3.</span> <span class="nav-text">自动化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DevOps"><span class="nav-number">4.</span> <span class="nav-text">DevOps</span></a></li></ol></div>
             
 
           </div>
