@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="到目前为止，假设我们的应用已经从DevOps平台上构建好了，准备部署，那么，我们就需要一个平台，利用它的能力，把应用或微服务部署到合适的主机上运行并监控起来。那么这个平台需要的最基本的功能有：  资源管理 ： 管理所有分散的主机，形成一个应用可用的机器集群 调度编排 ： 把应用/容器/服务部署到合适的资源节点并进行监控  把所有资源管理起来就形成了“云”，调度编排目前的最佳实践是以容器镜像为标准的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云平台">
+<meta property="og:url" content="https://wewld.com/2018/08/29/kubernetes/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="到目前为止，假设我们的应用已经从DevOps平台上构建好了，准备部署，那么，我们就需要一个平台，利用它的能力，把应用或微服务部署到合适的主机上运行并监控起来。那么这个平台需要的最基本的功能有：  资源管理 ： 管理所有分散的主机，形成一个应用可用的机器集群 调度编排 ： 把应用/容器/服务部署到合适的资源节点并进行监控  把所有资源管理起来就形成了“云”，调度编排目前的最佳实践是以容器镜像为标准的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-02T13:43:36.350Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="云平台">
+<meta name="twitter:description" content="到目前为止，假设我们的应用已经从DevOps平台上构建好了，准备部署，那么，我们就需要一个平台，利用它的能力，把应用或微服务部署到合适的主机上运行并监控起来。那么这个平台需要的最基本的功能有：  资源管理 ： 管理所有分散的主机，形成一个应用可用的机器集群 调度编排 ： 把应用/容器/服务部署到合适的资源节点并进行监控  把所有资源管理起来就形成了“云”，调度编排目前的最佳实践是以容器镜像为标准的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/08/29/kubernetes/"/>
+
+
+
+
+
+  <title>云平台 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/08/29/kubernetes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">云平台</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-29T22:00:00+08:00">
+                2018-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>到目前为止，假设我们的应用已经从DevOps平台上构建好了，准备部署，那么，我们就需要一个平台，利用它的能力，把应用或微服务部署到合适的主机上运行并监控起来。那么这个平台需要的最基本的功能有：</p>
+<ul>
+<li>资源管理 ： 管理所有分散的主机，形成一个应用可用的机器集群</li>
+<li>调度编排 ： 把应用/容器/服务部署到合适的资源节点并进行监控</li>
+</ul>
+<p>把所有资源管理起来就形成了“云”，调度编排目前的最佳实践是以容器镜像为标准的，所以，对容器进行调度的云也叫容器云。我们需要的就是这样一个云平台，进行微服务的调度。</p>
+<p>目前业界的主流是 Google的Kubernetes（K8S），提供构建“容器调度编排的云平台”，并作为开源软件捐献给了CNCF。那么，这篇文章就主要以Kubernetes为主，进行实践和总结。</p>
+<h1 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h1><ul>
+<li>云 由很多机器组成，通过网络提供计算，存储，软件等服务</li>
+<li>容器云 可以对容器进行调度编排的云</li>
+<li>公有云 第三方云服务商提供</li>
+<li>私有云 自建的或使用第三方托管</li>
+<li>混合云 私有云和公有云，一起搭建起来的云</li>
+<li>IAAS: 云的基础设施层，提供计算，存储，网络等服务</li>
+<li>PAAS: 云的平台层，提供公共的分布式软件服务</li>
+<li>SASS: 云的软件服务层，提供个性化软件，产品服务</li>
+<li>云原生：微服务部署运行在云平台上，并使用它的各种功能</li>
+</ul>
+<h1 id="K8S"><a href="#K8S" class="headerlink" title="K8S"></a>K8S</h1><h2 id="kubernetes架构"><a href="#kubernetes架构" class="headerlink" title="kubernetes架构"></a>kubernetes架构</h2><p>master节点做为集群大脑, node节点用于承载部署的容器应用</p>
+<h3 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h3><p>典型的master-slave架构, master是cluster的大脑，运行着apiserver、controller-manager、scheduler它的主要职责是对资源管理、调度，还有弹性伸缩、安全认证等。    </p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>etcd</td>
+<td>保存集群的状态</td>
+</tr>
+<tr>
+<td>apiserver</td>
+<td>资源操作的唯一入口，并提供认证、授权、访问控制、API注册和发现等机制；</td>
+</tr>
+<tr>
+<td>controller manager</td>
+<td>维护集群的状态，比如故障检测、自动扩展、滚动更新等；</td>
+</tr>
+<tr>
+<td>scheduler</td>
+<td>资源的调度，按照预定的调度策略将Pod调度到相应的机器上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>Node是kubernetes集群的工作节点，可以是物理机，虚拟机或云主机。</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kubelet</td>
+<td>维护容器的生命周期，同时也负责Volume（CSI）和网络（CNI）的管理</td>
+</tr>
+<tr>
+<td>Container runtime</td>
+<td>镜像管理以及Pod和容器的真正运行（CRI）</td>
+</tr>
+<tr>
+<td>kube-proxy</td>
+<td>为Service提供cluster内部的服务发现和负载均衡</td>
+</tr>
+</tbody>
+</table>
+<h3 id="其它一些组件："><a href="#其它一些组件：" class="headerlink" title="其它一些组件："></a>其它一些组件：</h3><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kube-dns</td>
+<td>域名解析服务</td>
+</tr>
+<tr>
+<td>Ingress Controller</td>
+<td>服务提供外网入口</td>
+</tr>
+<tr>
+<td>Heapster</td>
+<td>资源监控</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>控制台</td>
+</tr>
+<tr>
+<td>Federation</td>
+<td>跨可用区的集群</td>
+</tr>
+</tbody>
+</table>
+<h2 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a>资源管理</h2><h3 id="资源对象"><a href="#资源对象" class="headerlink" title="资源对象"></a>资源对象</h3><p>kubernetes 中的 Object，将它们简单的分类为以下几种资源对象：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>配置对象</td>
+<td>Node、Namespace、Service、Secret、ConfigMap、Ingress、Label、ThirdPartyResource、 ServiceAccount</td>
+</tr>
+<tr>
+<td>资源对象</td>
+<td>Pod、ReplicaSet、ReplicationController、Deployment、StatefulSet、DaemonSet、Job、CronJob、HorizontalPodAutoscaling</td>
+</tr>
+<tr>
+<td>存储对象</td>
+<td>Volume、Persistent Volume</td>
+</tr>
+<tr>
+<td>策略对象</td>
+<td>SecurityContext、ResourceQuota、LimitRange</td>
+</tr>
+</tbody>
+</table>
+<h3 id="集群资源管理"><a href="#集群资源管理" class="headerlink" title="集群资源管理"></a>集群资源管理</h3><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node</td>
+<td>集群的工作节点</td>
+</tr>
+<tr>
+<td>Namespace</td>
+<td>namespace创建多个“虚拟集群”，这些namespace之间可以完全隔离，也可以通过某种方式共享服务</td>
+</tr>
+<tr>
+<td>Label</td>
+<td>以key/value键值对的形式附加到各种对象上，建立资源之间的关联</td>
+</tr>
+<tr>
+<td>Annotation</td>
+<td>将资源对象关联到任意的非标识性元数据，存放对象更多的配置信息</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>Pod是kubernetes中可以创建的最小部署单元，它由一个或者多个容器组成，它们共享容器存储、网络和容器运行配置项。Pod中的容器总是被同时调度，有共同的运行环境。<br>Pod 的生命周期</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>挂起（Pending）</td>
+<td>Pod 已被 Kubernetes 系统接受，但有一个或者多个容器镜像尚未创建。等待时间包括调度 Pod 的时间和通过网络下载镜像的时间，这可能需要花点时间。</td>
+</tr>
+<tr>
+<td>运行中（Running）</td>
+<td>该 Pod 已经绑定到了一个节点上，Pod 中所有的容器都已被创建。至少有一个容器正在运行，或者正处于启动或重启状态。</td>
+</tr>
+<tr>
+<td>成功（Succeeded）</td>
+<td>Pod 中的所有容器都被成功终止，并且不会再重启。</td>
+</tr>
+<tr>
+<td>失败（Failed）</td>
+<td>Pod 中的所有容器都已终止了，并且至少有一个容器是因为失败终止。也就是说，容器以非0状态退出或者被系统终止。</td>
+</tr>
+<tr>
+<td>未知（Unknown）</td>
+<td>因为某些原因无法取得 Pod 的状态，通常是因为与 Pod 所在主机通信失败。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><p>Kubernetes中内建了很多controller（控制器），用来调度和控制资源对对象。</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deployment</td>
+<td>部署，为 Pod 和 ReplicaSet 提供声明式更新</td>
+</tr>
+<tr>
+<td>StatefulSet</td>
+<td>作为 Controller 为 Pod 提供唯一的标识。它可以保证部署和 scale 的顺序。解决有状态服务的问题</td>
+</tr>
+<tr>
+<td>DaemonSet</td>
+<td>确保全部Node 上运行一个 Pod 的副本。当有 Node 加入集群时，也会为他们新增一个 Pod</td>
+</tr>
+<tr>
+<td>ReplicaSet</td>
+<td>确保容器应用的副本数始终保持在用户定义的副本数</td>
+</tr>
+<tr>
+<td>Job</td>
+<td>批处理任务，即仅执行一次的任务，它保证批处理任务的一个或多个Pod成功结束</td>
+</tr>
+<tr>
+<td>CronJob</td>
+<td>管理基于时间的 Job</td>
+</tr>
+<tr>
+<td>Horizontal Pod Autoscaling</td>
+<td>Pod水平自动缩放</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h4><p>Deployment为Pod和Replica Set（下一代Replication Controller）提供声明式更新。典型的应用场景包括：    </p>
+<ul>
+<li><p>定义Deployment来创建Pod和ReplicaSet<br>创建：<br>kubectl create -f <a href="https://kubernetes.io/docs/user-guide/nginx-deployment.yaml" target="_blank" rel="noopener">https://kubernetes.io/docs/user-guide/nginx-deployment.yaml</a> –record</p>
+</li>
+<li><p>滚动升级和回滚应用<br>滚动升级：<br>kubectl rolling-update my-rcName-v1 -f my-rcName-v2-rc.yaml –update-period=10s<br>回滚：<br>kubectl rollout undo deployment/nginx-deployment</p>
+</li>
+<li><p>扩容和缩容<br>扩容：<br>kubectl scale deployment nginx-deployment –replicas 10<br>自动伸缩：<br>kubectl autoscale deployment nginx-deployment –min=10 –max=15 –cpu-percent=80    </p>
+</li>
+<li><p>暂停和继续Deployment</p>
+</li>
+</ul>
+<p>Kubernetes YML配置中，apiVersion，kind和metadata是必须配置项，其中编写 Deployment Spec的属性如下：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod Template</td>
+<td>.spec.template 是 pod template. 它跟 Pod有一模一样的schema，除了它是嵌套的并且不需要apiVersion 和 kind字段</td>
+</tr>
+<tr>
+<td>Replicas</td>
+<td>指定期望的pod数量，默认是1</td>
+</tr>
+<tr>
+<td>Selector</td>
+<td>用来指定 label selector ，圈定Deployment管理的pod范围</td>
+</tr>
+<tr>
+<td>Strategy</td>
+<td>指定新的Pod替换旧的Pod的策略：”Recreate”或者是 “RollingUpdate”。”RollingUpdate”是默认值。</td>
+</tr>
+<tr>
+<td>Recreate Deployment</td>
+<td>创建出新的Pod之前会先杀掉所有已存在的Pod</td>
+</tr>
+<tr>
+<td>Rolling Update Deployment</td>
+<td>滚动更新，可以指定maxUnavailable 和 maxSurge 来控制 rolling update 进程</td>
+</tr>
+<tr>
+<td>Max Unavailable</td>
+<td>用来指定在升级过程中不可用Pod的最大数量</td>
+</tr>
+<tr>
+<td>Max Surge</td>
+<td>指定可以超过期望的Pod数量的最大个数</td>
+</tr>
+<tr>
+<td>Progress Deadline Seconds</td>
+<td>指定在系统报告Deployment的failed前等待的秒数</td>
+</tr>
+<tr>
+<td>Min Ready Seconds</td>
+<td>指定没有任何容器crash的Pod并被认为是可用状态的最小秒数</td>
+</tr>
+<tr>
+<td>Rollback To</td>
+<td>配置Deployment回退的配置。设置该参数将触发回退操作，每次回退完成后，该值就会被清除。</td>
+</tr>
+<tr>
+<td>Revision</td>
+<td>指定回退到的revision。默认是0，意味着回退到上一个revision。</td>
+</tr>
+<tr>
+<td>Revision History Limit</td>
+<td>指定可以保留的旧的ReplicaSet数量</td>
+</tr>
+<tr>
+<td>Paused</td>
+<td>指定暂停和恢复Deployment，对paused deployment中的PodTemplateSpec的修改都不会触发新的rollout，默认是非paused。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="StatefulSet"><a href="#StatefulSet" class="headerlink" title="StatefulSet"></a>StatefulSet</h4><p>StatefulSet 作为 Controller 为 Pod 提供唯一的标识。它可以保证部署和 scale 的顺序。<br>StatefulSet 适用于有以下某个或多个需求的应用：</p>
+<ul>
+<li>稳定，唯一的网络标志。</li>
+<li>稳定，持久化存储。</li>
+<li>有序，优雅地部署和 scale。</li>
+<li>有序，优雅地删除和终止。</li>
+<li>有序，自动的滚动升级。</li>
+</ul>
+<p>比如有状态的数据库，各种中间件，zookeeper，等应用。 </p>
+<h4 id="ReplicationController和ReplicaSet"><a href="#ReplicationController和ReplicaSet" class="headerlink" title="ReplicationController和ReplicaSet"></a>ReplicationController和ReplicaSet</h4><p>ReplicationController用来确保容器应用的副本数始终保持在用户定义的副本数，即如果有容器异常退出，会自动创建新的Pod来替代。</p>
+<h4 id="Horizontal-Pod-Autoscaling"><a href="#Horizontal-Pod-Autoscaling" class="headerlink" title="Horizontal Pod Autoscaling"></a>Horizontal Pod Autoscaling</h4><p>自动化弹性伸缩，根据Pod的CPU利用率，内存和用户自定义的metric扩缩容。自定义指标的HPA，例如QPS,并且，可以对接Prometheus。</p>
+<h3 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h3><h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><p>应用的负载均衡，一组 Pod 能够被 Service 访问到，通常是通过 Label Selector</p>
+<h5 id="VIP-和-Service-代理"><a href="#VIP-和-Service-代理" class="headerlink" title="VIP 和 Service 代理"></a>VIP 和 Service 代理</h5><p>在 Kubernetes 集群中，每个 Node 运行一个 kube-proxy 进程。kube-proxy 负责为 Service 实现了一种 VIP（虚拟 IP）的形式, Kubernetes v1.2 起，默认使用 iptables 代理，转发Server请求到backend。</p>
+<h5 id="服务发现-1"><a href="#服务发现-1" class="headerlink" title="服务发现"></a>服务发现</h5><p>Kubernetes 支持2种基本的服务发现模式 : 环境变量 和 DNS</p>
+<ul>
+<li>环境变量<br>当 Pod 运行在 Node 上，kubelet 会为每个活跃的 Service 添加一组环境变量。</li>
+<li>DNS<br>DNS 服务器监视着创建新 Service 的 Kubernetes API，从而为每一个 Service 创建一组 DNS 记录。</li>
+</ul>
+<h4 id="发布服务-—-服务类型"><a href="#发布服务-—-服务类型" class="headerlink" title="发布服务 — 服务类型"></a>发布服务 — 服务类型</h4><p>Kubernetes ServiceTypes 允许指定一个需要的类型的 Service，默认是 ClusterIP 类型。Type 的取值以及行为如下：</p>
+<ul>
+<li>ClusterIP：通过集群的内部IP 暴露服务，选择该值，服务只能够在集群内部可以访问，这也是默认的 ServiceType。</li>
+<li>NodePort：通过每个 Node 上的 IP 和静态端口（NodePort）暴露服务。NodePort 服务会路由到 ClusterIP 服务，这个 ClusterIP 服务会自动创建。通过请求 <nodeip>:<nodeport>，可以从集群的外部访问一个 NodePort 服务。</nodeport></nodeip></li>
+<li>LoadBalancer：使用云提供商的负载均衡器，可以向外部暴露服务。外部的负载均衡器可以路由到 NodePort 服务和 ClusterIP 服务。</li>
+<li>ExternalName：通过返回 CNAME 和它的值，可以将服务映射到 externalName 字段的内容（例如， foo.bar.example.com）。 </li>
+</ul>
+<h4 id="Ingress"><a href="#Ingress" class="headerlink" title="Ingress"></a>Ingress</h4><p>Ingress，是一种HTTP方式的负载均衡 路由转发机制，并暴露集群内服务的工具。由实现Ingress 的Ingress Controller, HTTP代理服务器组成。kubernetes当前支持并维护GCE和nginx两种controller。Ingress Controller实时监控Kubernetes API，实时更新HTTP代理服务器的转发规则。<br>其它方案还有，F5，Kong ，Traefik 等实现的Ingress Controller。</p>
+<h2 id="调度与编排"><a href="#调度与编排" class="headerlink" title="调度与编排"></a>调度与编排</h2><h3 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h3><p>Kubernetes中有一个叫做kube-scheduler的组件，监听kube-apiserver中的调度命令，通过资源类型Deployment、DaemonSet、StatefulSet等定义的一些默认调度策略，和标签，将Pod调度到节点上。</p>
+<ul>
+<li>在特定节点上运行所有pod，指定节点名称</li>
+<li>节点标签进行调度：指定节点标签，  亲和性</li>
+<li>容器标签进行调度：将容器调度到具有特定标签的容器的主机 </li>
+<li>基于资源的调度：指定工作负载pod所需的内存和CPU资源</li>
+<li>仅给主机调度特定服务：主机上指定容器标签，添加节点taints（如主机标签）并使用容差”</li>
+<li>全局服务： DaemonSet，调度到所有节点上</li>
+</ul>
+<h3 id="编排"><a href="#编排" class="headerlink" title="编排"></a>编排</h3><p>kubernetes 通过使用YAML文件，来编排描述要创建的资源</p>
+<p>一些简化编排的工具：</p>
+<ul>
+<li>模拟命令执行<br>kubectl中很多命令支持 –dry-run 和 -o yaml 参数，可以方便地模拟命令执行，并输出yaml格式</li>
+<li>导出资源描述<br>kubectl get <resource-type> <resource> –export -o yaml 命令会以Yaml格式导出系统中已有资源</resource></resource-type></li>
+<li>Kompose转换工具<br>将docker-compose.yml编排文件 转换为Kubernetes YAML编排文件。</li>
+<li>Helm<br>Helm把Kubernetes资源(比如deployments、services或 ingress等) 打包到一个chart中，而chart被保存到chart仓库。通过chart仓库可用来存储和分享chart。Helm使发布可配置，支持发布应用配置的版本管理，简化了Kubernetes部署应用的版本控制、打包、发布、删除、更新等操作。</li>
+</ul>
+<h2 id="身份与权限认证"><a href="#身份与权限认证" class="headerlink" title="身份与权限认证"></a>身份与权限认证</h2><ul>
+<li><p>Service Account<br>为Pod中的进程提供身份信息</p>
+</li>
+<li><p>RBAC<br>基于角色的访问控制</p>
+</li>
+<li><p>Network Policy<br>Pod 之间是如何被允许互相通信，以及如何与其它网络 Endpoint 进行通信。 </p>
+</li>
+</ul>
+<h2 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h2><h3 id="Secret"><a href="#Secret" class="headerlink" title="Secret"></a>Secret</h3><p>Secret解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者Pod Spec中。Secret可以以Volume或者环境变量的方式使用。<br>Secret有三种类型：</p>
+<ul>
+<li>Service Account ：用来访问Kubernetes API，由Kubernetes自动创建，并且会自动挂载到Pod的/run/secrets/kubernetes.io/serviceaccount目录中；</li>
+<li>Opaque ：base64编码格式的Secret，用来存储密码、密钥等；</li>
+<li>kubernetes.io/dockerconfigjson ：用来存储私有docker registry的认证信息。</li>
+</ul>
+<h3 id="ConfigMap"><a href="#ConfigMap" class="headerlink" title="ConfigMap"></a>ConfigMap</h3><p>解决应用程序会从配置文件、命令行参数或环境变量中读取配置信息，这些配置信息与docker image解耦。ConfigMaps可以被用来：</p>
+<ul>
+<li>设置环境变量的值</li>
+<li>在容器里设置命令行参数</li>
+<li>在数据卷里面创建config文件</li>
+</ul>
+<h3 id="Volume"><a href="#Volume" class="headerlink" title="Volume"></a>Volume</h3><p>Pod下挂的目录，Pod每次重启可以共享该目录的数据。卷的生命比 Pod 中的所有容器都长，当这个容器重启时数据仍然得以保存。当然，当 Pod 不再存在时，卷也将不复存在。</p>
+<h3 id="Persistent-Volume"><a href="#Persistent-Volume" class="headerlink" title="Persistent Volume"></a>Persistent Volume</h3><p>持久化卷    </p>
+<ul>
+<li><p>PersistentVolume（PV）<br>是由管理员设置的存储，它是群集的一部分。就像节点是集群中的资源一样，PV 也是集群中的资源。 PV 是 Volume 之类的卷插件，但具有独立于使用 PV 的 Pod 的生命周期。此 API 对象包含存储实现的细节，即 NFS、iSCSI 或特定于云供应商的存储系统。</p>
+</li>
+<li><p>PersistentVolumeClaim（PVC）<br>是用户存储的请求。它与 Pod 相似。Pod 消耗节点资源，PVC 消耗 PV 资源。</p>
+</li>
+<li><p>StorageClass<br>StorageClass 为管理员提供了描述存储 “class（类）” 的方法。 不同的 class 可能会映射到不同的服务质量等级或备份策略，或由群集管理员确定的任意策略。管理员可以为没有申请绑定到特定 class 的 PVC 指定一个默认的 StorageClass。</p>
+</li>
+<li><p>本地持久化存储<br>本地持久化卷允许用户通过标准 PVC 接口以简单便携的方式访问本地存储。</p>
+</li>
+</ul>
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><p>Kubernetes本身并不提供网络功能，只是把网络接口开放出来，通过插件的形式实现。<br>Kubernetes管理的是集群，Kubernetes中的网络要解决的核心问题就是每台主机的IP地址网段划分，以及单个容器的IP地址分配。概括为：</p>
+<ul>
+<li>保证每个Pod拥有一个集群内唯一的IP地址</li>
+<li>保证不同节点的IP地址划分不会重复</li>
+<li>保证跨节点的Pod可以互相通信</li>
+<li>保证不同节点的Pod可以与跨节点的主机互相通信</li>
+<li>为了解决该问题，出现了一系列开源的Kubernetes中的网络插件与方案，如：<br>flannel，calico，contiv，weave net，kube-router，cilium，canal</li>
+</ul>
+<p>只要实现Kubernetes官方的设计的CNI - Container Network Interface（容器网络接口）就可以自己写一个网络插件，最常用的时flannel和calico插件。</p>
+<h3 id="flannel"><a href="#flannel" class="headerlink" title="flannel"></a>flannel</h3><p>Kubernetes集群内部存在三类IP，分别是：    </p>
+<ul>
+<li>Node IP：宿主机的IP地址</li>
+<li>Pod IP：使用网络插件创建的IP（如flannel），使跨主机的Pod可以互通</li>
+<li>Cluster IP：Service 虚拟IP，通过iptables规则访问服务</li>
+</ul>
+<p>在安装node节点的时候，节点上的进程是按照flannel -&gt; docker -&gt; kubelet -&gt; kube-proxy的顺序启动的。<br>Flannel是作为一个二进制文件的方式部署在每个node上，主要实现两个功能：</p>
+<ul>
+<li>为每个node分配subnet，容器将自动从该子网中获取IP地址</li>
+<li>当有node加入到网络中时，为每个node增加路由配置</li>
+</ul>
+<h3 id="calico"><a href="#calico" class="headerlink" title="calico"></a>calico</h3><p>Calico 创建和管理一个扁平的三层网络(不需要overlay)，每个容器会分配一个可路由的ip。由于通信时不需要解包和封包，网络性能损耗小，易于排查，且易于水平扩展。</p>
+<p>以上更详细请参考：<br><a href="https://jimmysong.io/kubernetes-handbook/" target="_blank" rel="noopener">https://jimmysong.io/kubernetes-handbook/</a><br><a href="http://kubernetes.kansea.com/docs/" target="_blank" rel="noopener">http://kubernetes.kansea.com/docs/</a></p>
+<h1 id="云平台"><a href="#云平台" class="headerlink" title="云平台"></a>云平台</h1><p>上面介绍了用Kubernetes构建基于容器调度的云平台，在这个平台上我们可以添加和管理集群的机器，安装基础的分布式软件，最后部署我们的应用程序-微服务。     </p>
+<ul>
+<li><p>云的通用基础设施<br>因为它的抽象与通用性，已经成为云的通用基础设施，通用的云平台。</p>
+</li>
+<li><p>分布式应用的管理平台<br>利用它的编排调度与容器管理，可以轻松快捷的创建和管理分布式应用服务。</p>
+</li>
+<li><p>微服务的运行时平台<br>提供了负载均衡，服务发现等微服务必须的组件，也随着Service Mesh - istio ， FAAS等技术的慢慢成熟，将提供一个让微服务更加简单，快捷的落地方案与最佳实践，也将是一个成熟的微服务运行时平台。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/08/29/kubernetes/" title="云平台">https://wewld.com/2018/08/29/kubernetes/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/12/持续集成与部署/" rel="next" title="持续集成与部署">
+                <i class="fa fa-chevron-left"></i> 持续集成与部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#名词解释"><span class="nav-number">1.</span> <span class="nav-text">名词解释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#K8S"><span class="nav-number">2.</span> <span class="nav-text">K8S</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kubernetes架构"><span class="nav-number">2.1.</span> <span class="nav-text">kubernetes架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Master"><span class="nav-number">2.1.1.</span> <span class="nav-text">Master</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node"><span class="nav-number">2.1.2.</span> <span class="nav-text">Node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它一些组件："><span class="nav-number">2.1.3.</span> <span class="nav-text">其它一些组件：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源管理"><span class="nav-number">2.2.</span> <span class="nav-text">资源管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#资源对象"><span class="nav-number">2.2.1.</span> <span class="nav-text">资源对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群资源管理"><span class="nav-number">2.2.2.</span> <span class="nav-text">集群资源管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-number">2.2.3.</span> <span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制器"><span class="nav-number">2.2.4.</span> <span class="nav-text">控制器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Deployment"><span class="nav-number">2.2.4.1.</span> <span class="nav-text">Deployment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#StatefulSet"><span class="nav-number">2.2.4.2.</span> <span class="nav-text">StatefulSet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReplicationController和ReplicaSet"><span class="nav-number">2.2.4.3.</span> <span class="nav-text">ReplicationController和ReplicaSet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Horizontal-Pod-Autoscaling"><span class="nav-number">2.2.4.4.</span> <span class="nav-text">Horizontal Pod Autoscaling</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务发现"><span class="nav-number">2.2.5.</span> <span class="nav-text">服务发现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Service"><span class="nav-number">2.2.5.1.</span> <span class="nav-text">Service</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#VIP-和-Service-代理"><span class="nav-number">2.2.5.1.1.</span> <span class="nav-text">VIP 和 Service 代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务发现-1"><span class="nav-number">2.2.5.1.2.</span> <span class="nav-text">服务发现</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发布服务-—-服务类型"><span class="nav-number">2.2.5.2.</span> <span class="nav-text">发布服务 — 服务类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ingress"><span class="nav-number">2.2.5.3.</span> <span class="nav-text">Ingress</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调度与编排"><span class="nav-number">2.3.</span> <span class="nav-text">调度与编排</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调度"><span class="nav-number">2.3.1.</span> <span class="nav-text">调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编排"><span class="nav-number">2.3.2.</span> <span class="nav-text">编排</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#身份与权限认证"><span class="nav-number">2.4.</span> <span class="nav-text">身份与权限认证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储"><span class="nav-number">2.5.</span> <span class="nav-text">存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Secret"><span class="nav-number">2.5.1.</span> <span class="nav-text">Secret</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConfigMap"><span class="nav-number">2.5.2.</span> <span class="nav-text">ConfigMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Volume"><span class="nav-number">2.5.3.</span> <span class="nav-text">Volume</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Persistent-Volume"><span class="nav-number">2.5.4.</span> <span class="nav-text">Persistent Volume</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">2.6.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flannel"><span class="nav-number">2.6.1.</span> <span class="nav-text">flannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#calico"><span class="nav-number">2.6.2.</span> <span class="nav-text">calico</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#云平台"><span class="nav-number">3.</span> <span class="nav-text">云平台</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
