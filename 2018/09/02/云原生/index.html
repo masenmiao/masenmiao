@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="云平台上一篇文章，介绍了用Kubernetes构建基于容器调度的云平台，在这个平台上我们可以添加管理集群的机器节点，安装想要的软件，部署我们的应用程序。      因为它的抽象与通用性，已经成为云的通用基础设施，通用的云平台。 在这个通用的云平台上搭建的应用就可以说是云原生应用，使用它的集群，部署和容器管理的基本能力，就可以站在云端。 云原生在这个云端，云原生应用有一个开源软件社区CNCF：CNC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="云原生">
+<meta property="og:url" content="https://wewld.com/2018/09/02/云原生/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="云平台上一篇文章，介绍了用Kubernetes构建基于容器调度的云平台，在这个平台上我们可以添加管理集群的机器节点，安装想要的软件，部署我们的应用程序。      因为它的抽象与通用性，已经成为云的通用基础设施，通用的云平台。 在这个通用的云平台上搭建的应用就可以说是云原生应用，使用它的集群，部署和容器管理的基本能力，就可以站在云端。 云原生在这个云端，云原生应用有一个开源软件社区CNCF：CNC">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://wewld.com/images/cloudnative.png">
+<meta property="og:updated_time" content="2018-10-03T21:56:47.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="云原生">
+<meta name="twitter:description" content="云平台上一篇文章，介绍了用Kubernetes构建基于容器调度的云平台，在这个平台上我们可以添加管理集群的机器节点，安装想要的软件，部署我们的应用程序。      因为它的抽象与通用性，已经成为云的通用基础设施，通用的云平台。 在这个通用的云平台上搭建的应用就可以说是云原生应用，使用它的集群，部署和容器管理的基本能力，就可以站在云端。 云原生在这个云端，云原生应用有一个开源软件社区CNCF：CNC">
+<meta name="twitter:image" content="https://wewld.com/images/cloudnative.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/09/02/云原生/"/>
+
+
+
+
+
+  <title>云原生 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/09/02/云原生/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">云原生</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-02T08:07:37+08:00">
+                2018-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="云平台"><a href="#云平台" class="headerlink" title="云平台"></a>云平台</h2><p>上一篇文章，介绍了用Kubernetes构建基于容器调度的云平台，在这个平台上我们可以添加管理集群的机器节点，安装想要的软件，部署我们的应用程序。     </p>
+<p>因为它的抽象与通用性，已经成为云的通用基础设施，通用的云平台。</p>
+<p>在这个通用的云平台上搭建的应用就可以说是云原生应用，使用它的集群，部署和容器管理的基本能力，就可以站在云端。</p>
+<h2 id="云原生"><a href="#云原生" class="headerlink" title="云原生"></a>云原生</h2><p>在这个云端，云原生应用有一个开源软件社区CNCF：<br>CNCF，全称Cloud Native Computing Foundation（云原生计算基金会），初衷是围绕“云原生”服务云计算，致力于维护和集成开源技术。</p>
+<p>所以，这篇文章主要来整理和认识一下，和云原生有关的技术。这些软件工具，可以用来搭建完整的企业基于云的IT实现。</p>
+<p>CNCF云原生开源软件大图：<br><img src="/images/cloudnative.png" alt=""><br>上图中，主要分为以下几块：</p>
+<h3 id="Cloud"><a href="#Cloud" class="headerlink" title="Cloud"></a>Cloud</h3><p>  公有云，以及kubernetes授权的云服务提供商</p>
+<h3 id="Provisioning"><a href="#Provisioning" class="headerlink" title="Provisioning"></a>Provisioning</h3><h5 id="Automation-amp-Configration"><a href="#Automation-amp-Configration" class="headerlink" title="Automation &amp; Configration"></a>Automation &amp; Configration</h5><ul>
+<li><strong>ansible</strong> 比较简洁，用 ssh 来自动化部署，使用 python 编写</li>
+<li>cfEngine 用 C 编写，因此性能会更好，但是学习曲线也更曲折</li>
+<li>chef ruby 编写，而且配置文件格式也是 ruby DSL</li>
+<li>saltstack 采用 zeroMQ 作为消息队列，实现 master-salve 模式，兼具性能和灵活性，但同时整个系统也更加复杂</li>
+<li>puppet </li>
+</ul>
+<h5 id="Container-Registries"><a href="#Container-Registries" class="headerlink" title="Container Registries"></a>Container Registries</h5><ul>
+<li><strong>Harbor 是开源的企业级容器镜像管理平台</strong></li>
+</ul>
+<h5 id="Secure-amp-Compliance"><a href="#Secure-amp-Compliance" class="headerlink" title="Secure &amp; Compliance"></a>Secure &amp; Compliance</h5><ul>
+<li>notary 和 tuf（the update framework） 是 CNCF 旗下的两个项目，tuf 是开源的安全和验证标准，notary 是它的一个实现，notary 可以用来验证镜像的安全性，也可以用来安全地发布软件包</li>
+</ul>
+<h5 id="Key-Management"><a href="#Key-Management" class="headerlink" title="Key Management"></a>Key Management</h5><ul>
+<li>spiffe 和 spire 是一对的，spiffe 定义了服务的认证标准和认证信息的标准，spire 是它的一个实现</li>
+</ul>
+<h3 id="Runtime-运行时"><a href="#Runtime-运行时" class="headerlink" title="Runtime 运行时"></a>Runtime 运行时</h3><h5 id="Cloud-Native-Storage（云原生存储）"><a href="#Cloud-Native-Storage（云原生存储）" class="headerlink" title="Cloud Native Storage（云原生存储）"></a>Cloud Native Storage（云原生存储）</h5><ul>
+<li><strong>Ceph</strong>：分布式存储系统，同时支持块存储、文件存储和对象存储，发展时间很久，稳定性也得到了验证</li>
+<li>GlusterFS：RedHat 旗下的产品，部署简单，扩展性强，</li>
+<li>Hadoop HDFS：Apache 基金会下的开源文件系统项目，在大数据领域广泛使用，基于 GFS 理念的开源版本。主节点保存元数据，并负责数据分布、复制、备份决策，工作节点存储数据，每个数据会有多个副本，保存在不同的工作节点</li>
+<li>LeoFS：高可用、分布式的对象存储系统，海量数据支持比较好，提供 HTTP、S3、NFS 等接口访问</li>
+<li>minio：开源的对象存储软件，提供和 AWS S3 兼容的接口，简单易用</li>
+</ul>
+<h5 id="Container-Runtime（容器运行时）"><a href="#Container-Runtime（容器运行时）" class="headerlink" title="Container Runtime（容器运行时）"></a>Container Runtime（容器运行时）</h5><ul>
+<li><strong>containerd</strong>：docker 公司从原来的 docker 引擎中剥离出来的容器核心功能，具有镜像管理和容器隔离两大功能，底层使用 runc</li>
+<li>rkt：CoreOS 公司提出的容器引擎技术，一直作为 docker 的直接竞争对手存在，对于促进容器标准化贡献很大</li>
+</ul>
+<h5 id="Cloud-Native-Network"><a href="#Cloud-Native-Network" class="headerlink" title="Cloud Native Network"></a>Cloud Native Network</h5><ul>
+<li>cni（Container Network Interface）：kubernetes 和 CoreOS 提出的容器网络接口标准，旨在为容器平台提供统一的网络访问模式，目前很多网络方案都已经集成进来</li>
+<li>calico：基于 BGP 的纯三层网络方案，性能很高，并且提供强大的网络防火墙功能，以满足用户对安全性的需求</li>
+<li>canal：基于 flannel 和 calico 提供 kubernetes pod 之间网络防火墙的项目</li>
+<li>contiv：思科推出的网络方案，支持 vxlan 和 vlan 方案，提供了多租户和主机访问控制策略功能</li>
+<li>cilium：利用 Linux 原生技术提供的网络方案，支持 L7 和 L3、L4 层的访问策略</li>
+<li>flannel：CoreOS 主要的容器网络项目，主要用于 kubernetes 平台提供 pod 之间的连通性，提供多种连网方案，部署和管理简单</li>
+</ul>
+<h3 id="Orchestration-amp-Management（编排和管理）"><a href="#Orchestration-amp-Management（编排和管理）" class="headerlink" title="Orchestration &amp; Management（编排和管理）"></a>Orchestration &amp; Management（编排和管理）</h3><h5 id="Scheduling-amp-Orchestration"><a href="#Scheduling-amp-Orchestration" class="headerlink" title="Scheduling &amp; Orchestration"></a>Scheduling &amp; Orchestration</h5><ul>
+<li>kubernetes</li>
+<li>docker swarm</li>
+<li>mesos：apache 旗下的任务调度平台，后来应用于容器调度</li>
+</ul>
+<h5 id="Coordination-amp-Service-Discovery"><a href="#Coordination-amp-Service-Discovery" class="headerlink" title="Coordination &amp; Service Discovery"></a>Coordination &amp; Service Discovery</h5><ul>
+<li>Zookeeper：Hadoop 的一个子项目，本来是作为 Hadoop 集群管理的数据存储，目前也被应用到容器领域，开发语言是 Java。一个缺点是使用和维护比较复杂</li>
+<li>Consul：HashiCorp 开发的分布式服务发现和配置管理工具，docker swarm 集群之前默认使用的就是这个</li>
+<li>Etcd：CoreOS 旗下的键值存储工具，是 kubernetes 默认的选择，因<br>此使用范围很广</li>
+</ul>
+<h5 id="RemoteCall"><a href="#RemoteCall" class="headerlink" title="RemoteCall"></a>RemoteCall</h5><ul>
+<li>Grpc</li>
+<li>Thrift</li>
+<li>Dubbo</li>
+</ul>
+<h5 id="Service-Proxy"><a href="#Service-Proxy" class="headerlink" title="Service Proxy"></a>Service Proxy</h5><p>作为服务网格的数据面板，部署为 sidecar，调解和控制微服务之间所有的网络通信</p>
+<ul>
+<li>Envoy </li>
+<li>Nginx</li>
+</ul>
+<h5 id="Api-Gateway"><a href="#Api-Gateway" class="headerlink" title="Api Gateway"></a>Api Gateway</h5><ul>
+<li>Kong：Mashape 开源的项目，基于 openrestry（Nginx + Lua） 的微服务网关，以插件为中心组织功能</li>
+<li>Nginx：Nginx Plus 产品为企业提供负载均衡、代理、微服务网关的各种功能</li>
+<li>Spring Cloud Gateway Netflix 微服务网关</li>
+</ul>
+<h5 id="Service-Mesh"><a href="#Service-Mesh" class="headerlink" title="Service Mesh"></a>Service Mesh</h5><ul>
+<li>linkerd：开源的网络代理服务，使用 scala 语言编写，最早提出了 service mesh 的概念</li>
+<li><strong>Istio：Google、IBM 和 Lyft 联合发布的微服务管理、配置和监控框架，使用 envoy 或者 linkerd 作为数据面板，控制层面负责配置和管理，深度集成到 kubernetes 平台</strong></li>
+</ul>
+<h3 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h3><h5 id="Database-amp-Data-Warehouse"><a href="#Database-amp-Data-Warehouse" class="headerlink" title="Database &amp; Data Warehouse"></a>Database &amp; Data Warehouse</h5><ul>
+<li>Sql 关系型： MySQL、DB2、oracle DB、postgreSQL、MariaDB 等</li>
+<li>Nosql<br>KV : redis、couchbase 等<br>文档： MongoDB、rethinkDB、ravenDB 等<br>列式： Cassandra、Hbase、vertica（列式关系数据库）、scylla等   </li>
+<li>newSQL ： F1/spanner，cockroachDB 和 TiDB等</li>
+<li>TSDB : druid,openTSDB等</li>
+</ul>
+<h5 id="Streaming-amp-Messaging"><a href="#Streaming-amp-Messaging" class="headerlink" title="Streaming &amp; Messaging"></a>Streaming &amp; Messaging</h5><h6 id="Streaming"><a href="#Streaming" class="headerlink" title="Streaming"></a>Streaming</h6><ul>
+<li>Flink</li>
+<li>Spark</li>
+</ul>
+<h6 id="Messaging"><a href="#Messaging" class="headerlink" title="Messaging"></a>Messaging</h6><ul>
+<li>kafka </li>
+<li>rabbitMQ</li>
+<li>rocketMQ</li>
+</ul>
+<h5 id="Source-Code-Management"><a href="#Source-Code-Management" class="headerlink" title="Source Code Management"></a>Source Code Management</h5><ul>
+<li>github</li>
+<li>gitlab</li>
+<li>bitbucket</li>
+</ul>
+<h5 id="Application-Definition-amp-Image-Build"><a href="#Application-Definition-amp-Image-Build" class="headerlink" title="Application Definition &amp; Image Build"></a>Application Definition &amp; Image Build</h5><ul>
+<li><strong>Helm：Helm是Kubernetes的包管理工具。它就像APT/Yum/ Homebrew</strong> *</li>
+<li>OPEN API：标准化的 API 接口，OpenAPI (aka Swagger v2.0) </li>
+<li>Telepresence可以让你在本地调试服务，本地开发和和对远程Kubernetes 集群的调试</li>
+<li>habitat：应用自动化管理平台，可以定义应用，并且提供 Supervisor 来保证应用的正确运行</li>
+<li>Packer：通过一个 yaml 文件，生成各种虚拟化平台的镜像</li>
+</ul>
+<h5 id="Continuous-Integration-amp-Delivery"><a href="#Continuous-Integration-amp-Delivery" class="headerlink" title="Continuous Integration &amp; Delivery"></a>Continuous Integration &amp; Delivery</h5><h6 id="CI"><a href="#CI" class="headerlink" title="CI"></a>CI</h6><ul>
+<li>jenkins 算是这个领域的翘楚，非常经典的一款软件，功能强大稳定，拥有很丰富的插件，算是开源界使用比较广泛的工具</li>
+<li>travis CI 为开源的 github 项目免费，对私有项目收费，因此很多 github 上项目能看到它的身影</li>
+<li>circleCI、 codeship、shippable、semaphore 都是 PaaS 产品，提供在线的 CI、CD 服务，一般提供免费和企业收费两种版本</li>
+<li>drone：原生支持 docker 的 CI 开源产品，使用 go 编写，整个工作流都是基于 docker 的，最终也会自动化构建 docker 镜像，push 到 registry 上</li>
+<li>gitlab runner：gitlab 提供的 CI 工具，gitlab CI 和 gitlab runner 一起工作，前者做控制，后者实际执行任务</li>
+</ul>
+<h6 id="CD"><a href="#CD" class="headerlink" title="CD"></a>CD</h6><ul>
+<li><strong>spinnaker：开源的 CD 软件，可以在多个云平台上进行部署，也可以集成CI工具来构建</strong> *</li>
+</ul>
+<h3 id="Platform（平台）"><a href="#Platform（平台）" class="headerlink" title="Platform（平台）"></a>Platform（平台）</h3><h5 id="PaaS-Container-Service"><a href="#PaaS-Container-Service" class="headerlink" title="PaaS/Container Service"></a>PaaS/Container Service</h5><ul>
+<li>heroku 是老牌的公有云类型的 PaaS 平台，界面友好，成熟稳定，所有操作提供命令行实现自动化，提供完整的监控和日志方案。</li>
+<li>cloud foundry 是 Pivotal 开源，支持多种语言、框架、云平台，旨在让开发者能够忽略架构问题，快速部署和扩展应用；</li>
+<li>openshift 是 redhat 开源的，功能和 cloud foundry 差不多</li>
+</ul>
+<h5 id="Kubernetes-授权的-installer-host-distribution"><a href="#Kubernetes-授权的-installer-host-distribution" class="headerlink" title="Kubernetes 授权的 installer,host,distribution"></a>Kubernetes 授权的 installer,host,distribution</h5><ul>
+<li>datawire 基于 kubernetes，侧重于微服务的管理；</li>
+<li>containerShip 也是 kubernetes 的管理平台，可以在多个云平台自动化部署和统一管理；</li>
+<li>Giant Swarm 提供混合云和多租户的 kubernetes 管理；</li>
+<li>kubermatic 能够给用户提供一键 kubernetes 集群安装和多集群管理服务；</li>
+<li>Gravitational 提供多 region 的 kubernetes 集群管理</li>
+<li>atomist 和 cloud66 侧重于 devOps 流程；</li>
+<li>flynn 是基于 docker 容器技术的开源 PaaS 软件，相比 cloud foundry 算是轻量级的实现；</li>
+<li>hyper.sh 比较有趣，它们以容器接口来提供虚拟机服务。</li>
+<li>Apcera: 一个企业级的容器管理平台，包括了运行容器所需编排、网络和安全功能。Apcera的一个特点是支持传统的应用，同时兼容传统应用和云原生应用，支持把前者迁移到云上</li>
+<li>apprenda：PaaS 云平台软件公司，基于 kubernetes 打造的应用管理平台，目前的商业版本 ACP(Apprenda Cloud Platform)提供了 kerberos 身份认证、应用审计等额外功能</li>
+<li>convox：基于 AWS 的应用部署、管理、监控的平台服务，提供了命令行实现任务的自动化</li>
+<li>DC/OS：mesos 的企业级产品，是一套开源项目，基于 mesos 分布式系统和 marathon，提供了编排、应用商店、GUI 界面等功能</li>
+<li>Diamanti 也是一家解决方案公司，基于 kubernetes 调度平台，同时支持 openshift PaaS 平台</li>
+<li>docker：没有看错，这里的 docker 指的是 docker 公司，而不是容器技术。作为一家商业化的公司，docker 也提供了商业化的产品和解决方案，开源的部分称为 docker CE（community edition），商业化产品为 docker EE（Enterprise Edition）</li>
+<li>mitantis cloud platform：原来有名的 openstack 公司，目前也逐渐接纳 kubernetes，一起构建云平台</li>
+<li>moby project：docker 公司把开源组件命名成 moby，意在把多个开源技术组件按照需求组合成满足用户需求的产品，docker CE 就是其中的产出</li>
+<li>platform9：同时支持 openstack 和 kubernetes 为核心的 Paas 服务</li>
+<li>portainer.io：docker 的界面化管理工具</li>
+<li>rancher：容器管理平台，之前同时支持 swarm、mesos 和 kubernetes，目前把重心逐渐迁移到 kubernetes 上</li>
+<li>tectonic：coreOS 推出的 kubernetes 集群服务，集成了 quay 镜像服务、coreOS 系统、和 promethues 监控等</li>
+<li>ubuntu：ubuntu 系统也内嵌了 LXD 容器技术，提供更多的容器技术</li>
+</ul>
+<h3 id="Observability-amp-Analysis"><a href="#Observability-amp-Analysis" class="headerlink" title="Observability &amp; Analysis"></a>Observability &amp; Analysis</h3><h5 id="Monitoring"><a href="#Monitoring" class="headerlink" title="Monitoring"></a>Monitoring</h5><ul>
+<li>zabbix 是老牌的监控工具，功能强大，最近界面也改进了不少；</li>
+<li>Nagios 和 graphite 是另外两个经典的监控工具。</li>
+<li>sensu 是一款较新的监控工具，Riemann 也能够进行分布式系统的集中式监控处理。</li>
+<li><strong>Prometheus：SoundCloud 是一套开源的监控&amp;报警&amp;时间序列数据库的组合,起始是由SoundCloud公司开发的，云原生监控工具</strong> *</li>
+<li>grafana：监控管理界面，能够从多个数据源导入数据，提供优美的界面和丰富的面板配置</li>
+<li>coscale：专门为容器和微服务优化的监控平台</li>
+<li>sentry：错误收集工具，能够集中式地查看应用的 crash report 和 traceback 信息</li>
+<li>server density：专注于服务监控的 SaaS 服务平台</li>
+<li>statsD：etsy 开源的数据统计信息，可以把数据继续发到后端的监控平台，比如 graphite</li>
+<li>sysdig：容器和 kubernetes 监控工具，同时提供了付费的监控服务</li>
+</ul>
+<h5 id="Logging"><a href="#Logging" class="headerlink" title="Logging"></a>Logging</h5><ul>
+<li>fluented 是一个开源的基于数据流（stream）的日志收集框架；</li>
+<li>graylog 是另外一个开源的选择，它们的思想都是把日志从系统各处收集起来进行统一分析、过滤和管理；</li>
+<li>elastic 提供 ELK（Elasticsearch、Logstash、Kibana） 技术栈负责日志收集，也提供在线的企业级 Saas 服务。</li>
+</ul>
+<h5 id="Tracing"><a href="#Tracing" class="headerlink" title="Tracing"></a>Tracing</h5><ul>
+<li>opentracing是一个开放的 tracing 接口标准和文档，提供了各种语言客户端的实现，支持的 tracing 工具包括 Jaeger、appdash 和 Zipkin（twitter 开源）；</li>
+<li>Cloud Sleuth 是 spring cloud 全家桶中一员，主要负责 tracing 功能。</li>
+</ul>
+<h5 id="Chaos-Engineering"><a href="#Chaos-Engineering" class="headerlink" title="Chaos Engineering"></a>Chaos Engineering</h5><ul>
+<li>Chaos Monkey：通过干掉pods来测试系统健壮性和可靠性。功能包括：网络故障模拟、服务重定向、资源限制等。</li>
+</ul>
+<h3 id="Serverless-Event-based"><a href="#Serverless-Event-based" class="headerlink" title="Serverless/Event-based"></a>Serverless/Event-based</h3><h5 id="云厂商产品"><a href="#云厂商产品" class="headerlink" title="云厂商产品"></a>云厂商产品</h5><ul>
+<li>AWS Lambda</li>
+<li>微软的 Azure functions</li>
+<li>Google的 Cloud functions</li>
+</ul>
+<h5 id="serverless-开发框架"><a href="#serverless-开发框架" class="headerlink" title="serverless 开发框架"></a>serverless 开发框架</h5><ul>
+<li>openFaas、fission 和 kubeless 都是基于 docker 和 kubernetes 开源的 serverless 开发框架，如果要想打造自己的 serverless 平台可以参考。</li>
+<li>serverless 是一个集成工具，它能帮助开发者在 serverless 应该部署到 AWS Lambda、Azure Functions、GCP Cloud Functions、kubeless 等平台，也就是说它封装了这些平台差异，提供了一致的接口，方便迁移和管理多 serverless 平台应用</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了，围绕着kubernetes的 CNCF云原生组织，认识了其生态上的技术，这些标准，技术和软件也是构建微服务落地的常用解决方案，其中有业界广泛使用的开源技术，并且和厂商，平台无关。</p>
+<p>另外，从云原生给出的应用发展路线图，可以看到，正在逐渐向ServiceMesh服务网格，FAAS无服务技术演进。</p>
+<p>参考：<br><a href="https://landscape.cncf.io/" target="_blank" rel="noopener">https://landscape.cncf.io/</a><br><a href="https://cizixs.com/2017/12/30/cncf-cloud-native-landscape" target="_blank" rel="noopener">https://cizixs.com/2017/12/30/cncf-cloud-native-landscape</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/09/02/云原生/" title="云原生">https://wewld.com/2018/09/02/云原生/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/29/kubernetes/" rel="next" title="云平台">
+                <i class="fa fa-chevron-left"></i> 云平台
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#云平台"><span class="nav-number">1.</span> <span class="nav-text">云平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#云原生"><span class="nav-number">2.</span> <span class="nav-text">云原生</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cloud"><span class="nav-number">2.1.</span> <span class="nav-text">Cloud</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Provisioning"><span class="nav-number">2.2.</span> <span class="nav-text">Provisioning</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Automation-amp-Configration"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">Automation &amp; Configration</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Container-Registries"><span class="nav-number">2.2.0.2.</span> <span class="nav-text">Container Registries</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Secure-amp-Compliance"><span class="nav-number">2.2.0.3.</span> <span class="nav-text">Secure &amp; Compliance</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Key-Management"><span class="nav-number">2.2.0.4.</span> <span class="nav-text">Key Management</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Runtime-运行时"><span class="nav-number">2.3.</span> <span class="nav-text">Runtime 运行时</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Cloud-Native-Storage（云原生存储）"><span class="nav-number">2.3.0.1.</span> <span class="nav-text">Cloud Native Storage（云原生存储）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Container-Runtime（容器运行时）"><span class="nav-number">2.3.0.2.</span> <span class="nav-text">Container Runtime（容器运行时）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Cloud-Native-Network"><span class="nav-number">2.3.0.3.</span> <span class="nav-text">Cloud Native Network</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Orchestration-amp-Management（编排和管理）"><span class="nav-number">2.4.</span> <span class="nav-text">Orchestration &amp; Management（编排和管理）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Scheduling-amp-Orchestration"><span class="nav-number">2.4.0.1.</span> <span class="nav-text">Scheduling &amp; Orchestration</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Coordination-amp-Service-Discovery"><span class="nav-number">2.4.0.2.</span> <span class="nav-text">Coordination &amp; Service Discovery</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#RemoteCall"><span class="nav-number">2.4.0.3.</span> <span class="nav-text">RemoteCall</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Service-Proxy"><span class="nav-number">2.4.0.4.</span> <span class="nav-text">Service Proxy</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Api-Gateway"><span class="nav-number">2.4.0.5.</span> <span class="nav-text">Api Gateway</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Service-Mesh"><span class="nav-number">2.4.0.6.</span> <span class="nav-text">Service Mesh</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Application"><span class="nav-number">2.5.</span> <span class="nav-text">Application</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Database-amp-Data-Warehouse"><span class="nav-number">2.5.0.1.</span> <span class="nav-text">Database &amp; Data Warehouse</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Streaming-amp-Messaging"><span class="nav-number">2.5.0.2.</span> <span class="nav-text">Streaming &amp; Messaging</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Streaming"><span class="nav-number">2.5.0.2.1.</span> <span class="nav-text">Streaming</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Messaging"><span class="nav-number">2.5.0.2.2.</span> <span class="nav-text">Messaging</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Source-Code-Management"><span class="nav-number">2.5.0.3.</span> <span class="nav-text">Source Code Management</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Application-Definition-amp-Image-Build"><span class="nav-number">2.5.0.4.</span> <span class="nav-text">Application Definition &amp; Image Build</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Continuous-Integration-amp-Delivery"><span class="nav-number">2.5.0.5.</span> <span class="nav-text">Continuous Integration &amp; Delivery</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#CI"><span class="nav-number">2.5.0.5.1.</span> <span class="nav-text">CI</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CD"><span class="nav-number">2.5.0.5.2.</span> <span class="nav-text">CD</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Platform（平台）"><span class="nav-number">2.6.</span> <span class="nav-text">Platform（平台）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#PaaS-Container-Service"><span class="nav-number">2.6.0.1.</span> <span class="nav-text">PaaS/Container Service</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Kubernetes-授权的-installer-host-distribution"><span class="nav-number">2.6.0.2.</span> <span class="nav-text">Kubernetes 授权的 installer,host,distribution</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Observability-amp-Analysis"><span class="nav-number">2.7.</span> <span class="nav-text">Observability &amp; Analysis</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Monitoring"><span class="nav-number">2.7.0.1.</span> <span class="nav-text">Monitoring</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Logging"><span class="nav-number">2.7.0.2.</span> <span class="nav-text">Logging</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Tracing"><span class="nav-number">2.7.0.3.</span> <span class="nav-text">Tracing</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Chaos-Engineering"><span class="nav-number">2.7.0.4.</span> <span class="nav-text">Chaos Engineering</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serverless-Event-based"><span class="nav-number">2.8.</span> <span class="nav-text">Serverless/Event-based</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#云厂商产品"><span class="nav-number">2.8.0.1.</span> <span class="nav-text">云厂商产品</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#serverless-开发框架"><span class="nav-number">2.8.0.2.</span> <span class="nav-text">serverless 开发框架</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
