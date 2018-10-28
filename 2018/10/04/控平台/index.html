@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="监控是互联网软件不可缺少的一部分，当系统出现问题时立即获得通知，然后快速进行响应。 微服务场景下，因为服务的粒度更小，服务之间访问的链路也更多，服务运行在容器云平台上，并且，可以执行快速的，动态的扩缩容，所以，微服务的监控一般需要更多的手段：服务健康监控，服务调用监控，服务调用链路监控，日志统一收集与监控，自定义业务监控等。 监控监控要能第一时间发现异常，然后告知异常，和帮助边界定位 监控内容与范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="监控">
+<meta property="og:url" content="https://wewld.com/2018/10/04/控平台/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="监控是互联网软件不可缺少的一部分，当系统出现问题时立即获得通知，然后快速进行响应。 微服务场景下，因为服务的粒度更小，服务之间访问的链路也更多，服务运行在容器云平台上，并且，可以执行快速的，动态的扩缩容，所以，微服务的监控一般需要更多的手段：服务健康监控，服务调用监控，服务调用链路监控，日志统一收集与监控，自定义业务监控等。 监控监控要能第一时间发现异常，然后告知异常，和帮助边界定位 监控内容与范">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-28T00:10:09.375Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="监控">
+<meta name="twitter:description" content="监控是互联网软件不可缺少的一部分，当系统出现问题时立即获得通知，然后快速进行响应。 微服务场景下，因为服务的粒度更小，服务之间访问的链路也更多，服务运行在容器云平台上，并且，可以执行快速的，动态的扩缩容，所以，微服务的监控一般需要更多的手段：服务健康监控，服务调用监控，服务调用链路监控，日志统一收集与监控，自定义业务监控等。 监控监控要能第一时间发现异常，然后告知异常，和帮助边界定位 监控内容与范">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2018/10/04/控平台/"/>
+
+
+
+
+
+  <title>监控 | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2018/10/04/控平台/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">监控</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-04T06:34:15+08:00">
+                2018-10-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>监控是互联网软件不可缺少的一部分，当系统出现问题时立即获得通知，然后快速进行响应。</p>
+<p>微服务场景下，因为服务的粒度更小，服务之间访问的链路也更多，服务运行在容器云平台上，并且，可以执行快速的，动态的扩缩容，所以，微服务的监控一般需要更多的手段：服务健康监控，服务调用监控，服务调用链路监控，日志统一收集与监控，自定义业务监控等。</p>
+<h2 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h2><p>监控要能第一时间发现异常，然后告知异常，和帮助边界定位</p>
+<h4 id="监控内容与范围"><a href="#监控内容与范围" class="headerlink" title="监控内容与范围"></a>监控内容与范围</h4><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>监控对象</th>
+<th>监控方式</th>
+<th>开源软件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>基础设施</td>
+<td>硬件、操作系统，网络等</td>
+<td>独立应用agent</td>
+<td>Zabbix,Nagios ,Prometheus-NodeExporter</td>
+</tr>
+<tr>
+<td>中间件监控</td>
+<td>关注基础服务（nginx,mysql,redis,mongoDB等）</td>
+<td>独立应用exporter</td>
+<td>Prometheus</td>
+</tr>
+<tr>
+<td>端上监控（监控网络和业务）</td>
+<td>手机端或PC端真实请求情况</td>
+<td>嵌入网络SDK，埋点SDK，JS SDK</td>
+<td>无</td>
+</tr>
+<tr>
+<td>网络主动探测</td>
+<td>网络在不同区域的情况，探测(ping,curl)不同层次(cdn,负载均衡,应用：域名，VIP，check.do等)；好处是主动发现</td>
+<td>独立应用/探针</td>
+<td>开源无，商业有</td>
+</tr>
+<tr>
+<td>服务健康指标监控</td>
+<td>健康的指标：CPU,内存，健康（包括应用内所有组件的情况），运行，环境，线程等指标</td>
+<td>嵌入SDK，提供endpoint服务或主动上报</td>
+<td>Spring Boot Actuator指标服务，Spring Boot Admin 指标展示</td>
+</tr>
+<tr>
+<td>服务调用指标监控</td>
+<td>调用的指标：调用成功，失败，超时和线程拒绝，熔断等的次数，还包括QPS、RT等指标</td>
+<td>嵌入SDK&amp;中间件</td>
+<td>hystrix-dashboard turbine ,dubbo/hsf 的监控</td>
+</tr>
+<tr>
+<td>服务调用链路监控</td>
+<td>关注服务全链路追踪与服务性能RT监控</td>
+<td>SDK&amp;调用链中间件</td>
+<td>SpringCloud Sleuth+Zipkin,Pinpoint,Skywalking,CAT,EgleEye</td>
+</tr>
+<tr>
+<td>服务日志收集监控</td>
+<td>关注应用服务(容器)日志收集</td>
+<td>埋点或独立应用采集</td>
+<td>Fluentd和Logstash ELK STACK</td>
+</tr>
+<tr>
+<td>业务监控</td>
+<td>制定具体业务检查规则，利用指标结果数据进行异常检测监控，如，环比，突升突降等</td>
+<td>一体化监控平台</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<h4 id="监控数据"><a href="#监控数据" class="headerlink" title="监控数据"></a>监控数据</h4><h5 id="数据格式化标准"><a href="#数据格式化标准" class="headerlink" title="数据格式化标准"></a>数据格式化标准</h5><p>标准化数据格式和监控平台对接，对数据进行计算，检测和保存。</p>
+<h5 id="数据上报方式"><a href="#数据上报方式" class="headerlink" title="数据上报方式"></a>数据上报方式</h5><ul>
+<li>主动上报：监控组件通过消息中间件，Rpc主动发送数据</li>
+<li>被动上报：监控组件通过暴漏endpoint接口，或日志采集</li>
+</ul>
+<h4 id="监控平台"><a href="#监控平台" class="headerlink" title="监控平台"></a>监控平台</h4><p>上面包括了从前端到后台微服务，再到底层主机网络的整个监控内容，要构建这样一套监控体系，还需要有一整套海量数据实时监控和告警的平台，形成一体化的监控产品/平台：</p>
+<p>监控平台需要打造一个中间层，统一由它来接入各种类型的监控数据源，进行预计算，还有对存储和查询的优化，例如，索引的创建清理和提前sampler，以及各种存储的优势组合等。可以减轻spark/flink实时处理负担，也屏蔽掉底层TSDB复杂的读写使用细节。还包括统一指标的查询展示和告警。</p>
+<p>这个中间件/平台的好处和要求：</p>
+<ol>
+<li>以通用一致的方式接入各种监控数据源</li>
+<li>公共的通用层，可以沉淀实时监控技术，和对TSDB的读写等优化</li>
+<li>需要有横向扩展的能力，通过扩容可以实现均衡负载和高可用</li>
+<li>提供统一的自定义查询展示，及异常检测功能。</li>
+</ol>
+<h5 id="数据实时处理"><a href="#数据实时处理" class="headerlink" title="数据实时处理"></a>数据实时处理</h5><p>海量数据实时接收，计算，存储，检索的解决方案</p>
+<ul>
+<li>接收 用于各种监控数据的标准化接入或采集，数据的预计算，利用中间层agent-server，控制实时计算的量，并优化存储和查询等</li>
+<li>计算 数据的采样，汇聚等，实时计算需要的监控指标结果 ，一般用flink , spark</li>
+<li>存储 计算后数据的存储，常用的有：ES , TSDB(druid, OpenTSDB)，Hbase等</li>
+</ul>
+<h5 id="监控配置和查询"><a href="#监控配置和查询" class="headerlink" title="监控配置和查询"></a>监控配置和查询</h5><ul>
+<li><p>监控配置</p>
+<p>  各业务的原始指标，纬度等配置，用于接入实时计算，保存，查询指标的元数据</p>
+</li>
+<li><p>查询展示</p>
+<p>  指标统一查询展示,支持自定义metric视图</p>
+</li>
+<li><p>业务监控</p>
+<p>  自定义业务检查的规则，利用计算后的指标结果进行异常检查</p>
+</li>
+<li><p>监控大盘/大图</p>
+<p>  定制的业务监控大图，如某业务在全国各省市的实时请求，交易数量和状态</p>
+</li>
+</ul>
+<h5 id="告警平台"><a href="#告警平台" class="headerlink" title="告警平台"></a>告警平台</h5><p>异常时消息的统一接入和发送，可以设置业务每天发送的数量限制，和告警收敛等功能；<br>发送方式一般有：邮件，短信，微信/钉钉等。</p>
+<h4 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h4><h5 id="APM"><a href="#APM" class="headerlink" title="APM"></a>APM</h5><p>APM (Application Performance Management) 应用性能管理，狭义上的APM单指分布式服务调用链路监控，广义上指端到端的每一个层次的全范围监控。</p>
+<h5 id="微服务的限流监控"><a href="#微服务的限流监控" class="headerlink" title="微服务的限流监控"></a>微服务的限流监控</h5><p>限流是针对微服务接入流量的一种保护，熔断是对调用服务不可用时的保护。通过对流量监控，qps，RT，以及限流的qps等，就可以知道当前的服务流量情况，以及是否需要做出扩容调整。</p>
+<h5 id="压测"><a href="#压测" class="headerlink" title="压测"></a>压测</h5><p>类似网络探针服务（网络探测监控），可以在边缘计算节点上部署压测流量来模拟用户真实流量，对线上系统进行压力性能测试。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>监控，包括提供端到端的各种服务运行时指标的收集，计算，查询展示，异常检测与告警，以及通过云平台来对服务做出可能的修复，如流量的异常指标做出服务扩容。</p>
+<p>所以，在微服务的体系下，监控不仅是其能否落地的关键部分，而且发挥着重要的位置。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2018/10/04/控平台/" title="监控">https://wewld.com/2018/10/04/控平台/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/02/云原生/" rel="next" title="云原生">
+                <i class="fa fa-chevron-left"></i> 云原生
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#监控"><span class="nav-number">1.</span> <span class="nav-text">监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#监控内容与范围"><span class="nav-number">1.0.1.</span> <span class="nav-text">监控内容与范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控数据"><span class="nav-number">1.0.2.</span> <span class="nav-text">监控数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据格式化标准"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">数据格式化标准</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据上报方式"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">数据上报方式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控平台"><span class="nav-number">1.0.3.</span> <span class="nav-text">监控平台</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据实时处理"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">数据实时处理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#监控配置和查询"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">监控配置和查询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#告警平台"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">告警平台</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其它"><span class="nav-number">1.0.4.</span> <span class="nav-text">其它</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#APM"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">APM</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#微服务的限流监控"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">微服务的限流监控</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#压测"><span class="nav-number">1.0.4.3.</span> <span class="nav-text">压测</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
