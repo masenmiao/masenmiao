@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Serverless定义：表面上的意思是无须关心服务的计算资源，会按照请求量自动伸缩； 实际上，Serverless，最大价值或愿景是 “just to focus on business logic”，真正落地“面向业务”，降低研发门槛和提升效率。 Serverless 和传统云计算的区别：  Decoupling of computation and storage; they scale s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serverless">
+<meta property="og:url" content="https://wewld.com/2019/04/07/Serverless/index.html">
+<meta property="og:site_name" content="We Wld">
+<meta property="og:description" content="Serverless定义：表面上的意思是无须关心服务的计算资源，会按照请求量自动伸缩； 实际上，Serverless，最大价值或愿景是 “just to focus on business logic”，真正落地“面向业务”，降低研发门槛和提升效率。 Serverless 和传统云计算的区别：  Decoupling of computation and storage; they scale s">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://wewld.com/images/knative-users.png">
+<meta property="og:image" content="https://wewld.com/images/knative-component.png">
+<meta property="og:image" content="https://wewld.com/images/knative-comprelation.png">
+<meta property="og:image" content="https://wewld.com/images/knative-event-comp.png">
+<meta property="og:image" content="https://wewld.com/images/knative-event-real.png">
+<meta property="og:updated_time" content="2020-02-01T10:36:42.755Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Serverless">
+<meta name="twitter:description" content="Serverless定义：表面上的意思是无须关心服务的计算资源，会按照请求量自动伸缩； 实际上，Serverless，最大价值或愿景是 “just to focus on business logic”，真正落地“面向业务”，降低研发门槛和提升效率。 Serverless 和传统云计算的区别：  Decoupling of computation and storage; they scale s">
+<meta name="twitter:image" content="https://wewld.com/images/knative-users.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wewld.com/2019/04/07/Serverless/"/>
+
+
+
+
+
+  <title>Serverless | We Wld</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">We Wld</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">public static void main</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wewld.com/2019/04/07/Serverless/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="masen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="We Wld">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Serverless</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-07T11:04:02+08:00">
+                2019-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Serverless"><a href="#Serverless" class="headerlink" title="Serverless"></a>Serverless</h2><p>定义：表面上的意思是无须关心服务的计算资源，会按照请求量自动伸缩；</p>
+<p>实际上，Serverless，最大价值或愿景是 “just to focus on business logic”，真正落地“面向业务”，降低研发门槛和提升效率。</p>
+<p>Serverless 和传统云计算的区别：</p>
+<ul>
+<li>Decoupling of computation and storage; they scale separately and are priced independently.</li>
+<li>The abstraction of executing a piece of code instead of allocating resources on which to execute that code.</li>
+<li>Paying for the code execution instead of paying for resources you have allocated to executing the code.</li>
+</ul>
+<p>Serverless技术带来的好处：</p>
+<ol>
+<li>时间效率：devops整体的效率</li>
+<li>成本效率：提高资源使用率，按需付费</li>
+</ol>
+<p>云服务提供商的挑战：计算资源，存储等服务按量弹性伸缩及收费</p>
+<hr>
+<h2 id="Knative"><a href="#Knative" class="headerlink" title="Knative"></a>Knative</h2><p>本篇主要是对Knative的整理，Knative是Google 与 Pivotal、SAP、Red Hat、IBM 等行业领导者携手合作的 Serverless 项目，也是目前主流的Serverless平台。</p>
+<p>Google在云原生领域目前有了这三部曲：</p>
+<ul>
+<li>Kubernetes：云平台底座，解决了应用上云的问题，主要包括：资源调度，服务伸缩</li>
+<li>Istio：服务网格，和开发语言无关，剥离掉服务运行时要有的通用能力，抽象为kubernete组件并以非侵入的方式提供：服务注册与发现，路由配置，负载均衡，重试，超时，熔断，故障注入，策略控制，遥测收集等。</li>
+<li>Knative ：代码消除到至简，最后只剩业务逻辑。简化分为三部分：构建配置，服务kuber,istio配置，和工程代码。</li>
+</ul>
+<p>Knative 构建在Kubernetes，Istio之上，与不同角色之间的关系：</p>
+<p><img src="/images/knative-users.png" alt="upload successful"><br>Knative组件包括：</p>
+<ul>
+<li>Build（构建）（deprecated）:<br>通过灵活的插件化的构建系统将用户源代码构建成容器。目前已经支持多个构建系统，比如 Google 的 Kaniko，它无需运行 Docker daemon 就可以在 Kubernetes 集群上构建容器镜像。随着pipeline功能的演化以及未来定位，将这部分剥离Knative，形成一个标准化云原生Kubernetes CI/CD解决方案—Tekton。</li>
+<li>Serving（服务）:<br>基于负载自动伸缩，包括在没有负载时缩减到零。允许你为多个修订版本（revision）应用创建流量策略，从而能够通过 URL 轻松路由到目标应用程序。</li>
+<li>Event（事件）:<br>使得生产和消费事件变得容易。抽象出事件源，并允许操作人员使用自己选择的消息传递层。</li>
+</ul>
+<h3 id="Build（构建）（deprecated）"><a href="#Build（构建）（deprecated）" class="headerlink" title="Build（构建）（deprecated）"></a>Build（构建）（deprecated）</h3><p>从源代码到容器镜像的构建，运行在 Kubernetes CRD上，其组件还包括：</p>
+<ul>
+<li>BuildTemplate：封装可复用，参数化的构建步骤集合</li>
+<li>Builder：Build可以包含多个步骤，每个步骤是一个Builder</li>
+<li>ServiceAccount：私有资源（如 Git 存储库或容器镜像库）进行身份验证</li>
+</ul>
+<p>目前，Knative 已经支持多个 Build Template ，包括：</p>
+<ul>
+<li>Kaniko： 在运行的容器中构建容器镜像，而不依赖于运行 Docker daemon ,需要dockerfile。</li>
+<li>Jib： 为Java应用程序构建容器镜像。</li>
+<li>Buildpack： 不需要dockerfile，自动检测应用程序的运行时，建立一个容器镜像使用 Cloud Foundry Buildpack。</li>
+</ul>
+<h4 id="Knative-Build构建的好处："><a href="#Knative-Build构建的好处：" class="headerlink" title="Knative Build构建的好处："></a>Knative Build构建的好处：</h4><ul>
+<li>在kubernetes之上利用CRD，提供更抽象通用的构建组件</li>
+<li>以一致的方式编译和打包代码</li>
+<li>不必每次更新代码时都构建或推送容器镜像</li>
+</ul>
+<h4 id="Tekton"><a href="#Tekton" class="headerlink" title="Tekton"></a>Tekton</h4><p>Kubernetes原生CI/CD系统，基于Kubernetes CRD，包括：</p>
+<ul>
+<li>Task：顾名思义，Task表示一个构建任务，Task里可以定义一系列的steps，例如编译代码、构建镜像、推送镜像等，每个step实际由一个Pod执行。</li>
+<li>TaskRun：Task只是定义了一个模版，TaskRun才真正代表了一次实际的运行，当然你也可以自己手动创建一个TaskRun，TaskRun创建出来之后，就会自动触发Task描述的构建任务。</li>
+<li>Pipeline：一个或多个Task、PipelineResource以及各种定义参数的集合。</li>
+<li>PipelineRun：类似Task和TaskRun的关系，pipelineRun也表示某一次实际运行的Pipeline，下发一个pipelineRun CRD实例到Kubernetes后，同样也会触发一次Pipeline的构建。</li>
+<li>PipelineResource：表示pipeline input资源，比如GitHub上的源码，或者pipeline output资源，例如一个容器镜像或者构建生成的jar包等。<br>参考：<a href="https://cloud.tencent.com/developer/article/1538063" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1538063</a></li>
+</ul>
+<h3 id="Serving（服务）"><a href="#Serving（服务）" class="headerlink" title="Serving（服务）"></a>Serving（服务）</h3><p>在Kubernetes 和 Istio 之上，支持部署无服务应用或方法。</p>
+<p>Knative Serving项目提供的功能包括：</p>
+<ul>
+<li>无服务容器的快速部署</li>
+<li>自动伸缩（缩放可到零）</li>
+<li>ISIO组件之上的路由和网络编程</li>
+<li>已部署代码和配置的时间点快照</li>
+</ul>
+<h4 id="Serving"><a href="#Serving" class="headerlink" title="Serving"></a>Serving</h4><p>Knative Serving 定义了一些CRD资源. 这些对象用于定义和控制您的无服务器工作负载在集群上的行为。包括如下：</p>
+<p><img src="/images/knative-component.png" alt="upload successful"></p>
+<h5 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h5><p>service.serving.knative.dev资源自动管理工作负载的整个生命周期。它控制其他对象的创建，以确保您的应用程序对服务的每次更新都有一个Route、一个Configuration和一个新的Revision。Service可以定义为始终将流量路由到最新版本或固定版本。</p>
+<h5 id="Route"><a href="#Route" class="headerlink" title="Route"></a>Route</h5><p>route.serving.knative.dev资源将网络端点映射到一个或多个Revision。您可以通过多种方式管理流量，对应了 istio 的流量管理。</p>
+<h5 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h5><p>configuration.serving.knative.dev资源保持部署所需的状态。最小化 Configuration 至少包括一个配置名称和一个要部署容器镜像的引用。修改配置将创建新的修订。</p>
+<h5 id="Revision"><a href="#Revision" class="headerlink" title="Revision"></a>Revision</h5><p>revision.serving.knative.dev资源是对工作负荷所做的每个修改的代码和配置的时间点快照。</p>
+<p>如下是一个简单的Service配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> apiVersion: serving.knative.dev/v1alpha1</span><br><span class="line">   kind: Service</span><br><span class="line">   metadata:</span><br><span class="line">     name: helloworld-java</span><br><span class="line">     namespace: default</span><br><span class="line">   spec:</span><br><span class="line">     runLatest:</span><br><span class="line">       configuration:</span><br><span class="line">         revisionTemplate:</span><br><span class="line">           spec:</span><br><span class="line">             container:</span><br><span class="line">               image: docker.io/&#123;username&#125;/helloworld-java</span><br><span class="line">               env:</span><br><span class="line">                 - name: TARGET</span><br><span class="line">                   value: &quot;Spring Boot Sample v1&quot;</span><br><span class="line">                   </span><br><span class="line"># Build the container on your local machine</span><br><span class="line">docker build -t &#123;username&#125;/helloworld-java .</span><br><span class="line"></span><br><span class="line"># Push the container to docker registry</span><br><span class="line">docker push &#123;username&#125;/helloworld-java</span><br><span class="line">   </span><br><span class="line">kubectl apply --filename service.yaml</span><br><span class="line">kubectl delete --filename service.yam</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子没有配置build，所以需要依赖构建好的镜像，更多例子可以参考：<a href="https://www.knative.dev/docs/serving/samples/" target="_blank" rel="noopener">https://www.knative.dev/docs/serving/samples/</a></p>
+<h5 id="Knative-Service-的好处："><a href="#Knative-Service-的好处：" class="headerlink" title="Knative Service 的好处："></a>Knative Service 的好处：</h5><p>提供了更高的抽象，封装简化了 kubernetes 和 istio 的配置实现细节，包括 deployment、ingress、service discovery、auto scaling等。</p>
+<p>下面这张图介绍了 knative serving 与kuber,istio各组件之间的关系：</p>
+<p><img src="/images/knative-comprelation.png" alt="upload successful"></p>
+<h5 id="Autoscaler-（自动伸缩器）"><a href="#Autoscaler-（自动伸缩器）" class="headerlink" title="Autoscaler （自动伸缩器）"></a>Autoscaler （自动伸缩器）</h5><p>Pod自动汇报 metrics 数据到 Autoscaler，Autoscaler 根据请求量和资源情况调整 deployment 的 replicas 数量，实现自动扩缩容,包括缩容到0。伸缩算法针对两个独立的时间间隔计算所有数据点的平均值：</p>
+<ul>
+<li><p>Stable Mode（稳定模式）：使用 60 秒时间窗平均值决定如何伸缩部署</p>
+</li>
+<li><p>Panic Mode （恐慌模式）： 6 秒窗口的平均并发量两次到达期望目标，Autoscaler 转换为 Panic Mode 并使用 6 秒时间窗</p>
+</li>
+</ul>
+<h5 id="Activator-（激活器）"><a href="#Activator-（激活器）" class="headerlink" title="Activator （激活器）"></a>Activator （激活器）</h5><p>缩容至零时所有流量均路由至 Activator,当接收到某一请求时，由Activator去激活Revision,并代理请求至Pods。</p>
+<h3 id="Event（事件）"><a href="#Event（事件）" class="headerlink" title="Event（事件）"></a>Event（事件）</h3><h4 id="设计概述"><a href="#设计概述" class="headerlink" title="设计概述"></a>设计概述</h4><ul>
+<li>事件和服务之间是解耦的，相互独立。（函数不关心谁调用了它，而事件源触发也不关心谁会处理它）</li>
+<li>生产者和事件源也是独立的，生产和订阅没有部署上的先后顺序依赖。</li>
+<li>订阅者可以选择过滤事件的内容。</li>
+</ul>
+<h4 id="概念-amp-组件"><a href="#概念-amp-组件" class="headerlink" title="概念&amp;组件"></a>概念&amp;组件</h4><h5 id="event-producers-consumers"><a href="#event-producers-consumers" class="headerlink" title="event producers/consumers"></a>event producers/consumers</h5><p>事件的产生者，和消费者</p>
+<h5 id="event-source"><a href="#event-source" class="headerlink" title="event source"></a>event source</h5><p>定义事件在何处生成以及如何将事件传递给关注对象的方式，producers就可以生产这些定义好的事件，并接入到Knative 体系中</p>
+<h5 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h5><ul>
+<li>渠道是消息传递的抽象，后端可以使用 kafka、RabbitMQ等具体的实现。channel name 类似于消息集群中的 topic，可以用来解耦事件源和函数。</li>
+<li>channel 有一个 status.address.hostname 字段，这个字段确定了事件怎么到达channel。</li>
+</ul>
+<h5 id="Subscriptions"><a href="#Subscriptions" class="headerlink" title="Subscriptions"></a>Subscriptions</h5><p>订阅是通道和服务之间的纽带，是channel 和后端函数的绑定信息，一个 channel 可以绑定到多个knative service。</p>
+<p>事件发送分为直接发送，和使用通道，订阅发送到多个端点</p>
+<p><img src="/images/knative-event-comp.png" alt="upload successful"></p>
+<p>实际的消息转发如下图：</p>
+<p><img src="/images/knative-event-real.png" alt="upload successful"></p>
+<p>事件还包括一些组件，目前这块功能还在快速演化。</p>
+<h4 id="Knative-event的好处"><a href="#Knative-event的好处" class="headerlink" title="Knative event的好处"></a>Knative event的好处</h4><ul>
+<li>当某件事发生时，就可以触发某个的函数</li>
+<li>对事件消息的抽象，简化了编程难度</li>
+</ul>
+<p>事件的很多概念也来自Spring cloud Stream，Reactive Streams ；<br>因为Spring Cloud就是Pivotal 的出品，Pivotal也是 Knative 主要贡献者之一；<br>另外，过去Spring的成功就是凭借统一的抽象，提供脚手架集成来简化应用开发的代码，接下来，Knative会更抽象，更简化，最终达到应用代码最小化到只和业务相关。</p>
+<p>实践例子</p>
+<ul>
+<li>spring cloud function简化代码，函数式编程</li>
+<li>riff 简化knative的build，及service配置</li>
+</ul>
+<p>参考：<br><a href="https://www.knative.dev/docs/serving/samples/hello-world/helloworld-java/index.html" target="_blank" rel="noopener">https://www.knative.dev/docs/serving/samples/hello-world/helloworld-java/index.html</a><br><a href="https://github.com/bijukunjummen/sample-boot-knative" target="_blank" rel="noopener">https://github.com/bijukunjummen/sample-boot-knative</a></p>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="https://www.knative.dev/docs/" target="_blank" rel="noopener">https://www.knative.dev/docs/</a><br><a href="https://rise.cs.berkeley.edu/blog/a-berkeley-view-on-serverless-computing/" target="_blank" rel="noopener">https://rise.cs.berkeley.edu/blog/a-berkeley-view-on-serverless-computing/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="masen 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="masen 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    masen
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wewld.com/2019/04/07/Serverless/" title="Serverless">https://wewld.com/2019/04/07/Serverless/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/08/Service-Mesh/" rel="next" title="服务网格">
+                <i class="fa fa-chevron-left"></i> 服务网格
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">masen</p>
+              <p class="site-description motion-element" itemprop="description">my learning and summary</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/masenmiao" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:masen.miao@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Serverless"><span class="nav-number">1.</span> <span class="nav-text">Serverless</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Knative"><span class="nav-number">2.</span> <span class="nav-text">Knative</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Build（构建）（deprecated）"><span class="nav-number">2.1.</span> <span class="nav-text">Build（构建）（deprecated）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Knative-Build构建的好处："><span class="nav-number">2.1.1.</span> <span class="nav-text">Knative Build构建的好处：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tekton"><span class="nav-number">2.1.2.</span> <span class="nav-text">Tekton</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Serving（服务）"><span class="nav-number">2.2.</span> <span class="nav-text">Serving（服务）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Serving"><span class="nav-number">2.2.1.</span> <span class="nav-text">Serving</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Service"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Route"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">Route</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Configuration"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">Configuration</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Revision"><span class="nav-number">2.2.1.4.</span> <span class="nav-text">Revision</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Knative-Service-的好处："><span class="nav-number">2.2.1.5.</span> <span class="nav-text">Knative Service 的好处：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Autoscaler-（自动伸缩器）"><span class="nav-number">2.2.1.6.</span> <span class="nav-text">Autoscaler （自动伸缩器）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Activator-（激活器）"><span class="nav-number">2.2.1.7.</span> <span class="nav-text">Activator （激活器）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Event（事件）"><span class="nav-number">2.3.</span> <span class="nav-text">Event（事件）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计概述"><span class="nav-number">2.3.1.</span> <span class="nav-text">设计概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#概念-amp-组件"><span class="nav-number">2.3.2.</span> <span class="nav-text">概念&amp;组件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#event-producers-consumers"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">event producers/consumers</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#event-source"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">event source</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#channel"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">channel</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Subscriptions"><span class="nav-number">2.3.2.4.</span> <span class="nav-text">Subscriptions</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Knative-event的好处"><span class="nav-number">2.3.3.</span> <span class="nav-text">Knative event的好处</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考："><span class="nav-number">3.</span> <span class="nav-text">参考：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">masen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

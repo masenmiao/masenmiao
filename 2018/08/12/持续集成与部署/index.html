@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="We Wld">
 <meta property="og:description" content="持续集成CI ，Continuos Integration，持续集成。 什么是持续集成每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。    持续集成发展历程： 手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署 CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-27T22:10:45.391Z">
+<meta property="og:updated_time" content="2020-06-21T07:23:02.485Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="持续集成与部署">
 <meta name="twitter:description" content="持续集成CI ，Continuos Integration，持续集成。 什么是持续集成每一次代码提交后，进行功能代码验证和软件部署包的构建等，来   第一时间发现质量问题并反馈给相关人员，时刻保证功能代码质量，提高功能集成与构建的效率。    持续集成发展历程： 手工命令：手工执行脚本命令，或工具插件，进行测试，构建打包和部署 CI工具： 使用独立的CI工具进行构建，使用独立的部署控制台进行发布">
@@ -451,11 +451,15 @@ Chaos Monkey
  -->
 <h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>上面总结了持续集成，也包括了持续交付delivery , 下面就说说部署deploy的事情</p>
 <h3 id="部署的方式"><a href="#部署的方式" class="headerlink" title="部署的方式"></a>部署的方式</h3><ul>
-<li><p>滚动<br>逐个进行服务器版本更新，一般可以设置间隔时间<br>缺点：新版本没有充分验证</p>
+<li><p>滚动<br>逐个进行服务器版本更新，启动一台新版本，停止一台老版本，一般可以设置间隔时间，升级时只需多占用1台服务器<br>缺点：新版本没有充分验证</p>
 </li>
 <li><p>蓝绿<br>部署新版本，老版本同时在线，切换流量到新版本，验证通过删除老版本，反之则回滚切换流量到老版本<br>缺点：资源浪费</p>
 </li>
-<li><p>灰度（金丝雀）<br>部署1台新版本，通过负载均衡权重设置，或灰度功能配置，让小部分权重的流量或指定规则的用户路由到新版本，验证通过，再更新剩下的服务器，反之则回滚</p>
+<li><p>金丝雀<br>可以部署一个独立的单元，通过负载均衡权重设置，部署和引入新的流量；一般作为发布的一环，安全生产环境的验证，通过后才发布正式环境<br>缺点：机器少，流量小，验证时间有限</p>
+</li>
+<li><p>灰度<br>能够平滑过渡的一种发布方式。在代码中通过开关控制，全量发布到线上后，再通过灰度功能配置，让指定权重的流量和规则的用户使用到新版本，验证通过后，再逐步放量，反之则回滚<br>缺点：代码之后需要下线</p>
+</li>
+<li><p>AB<br>需要根据人群得到不同版本的效果实验数据分析，从而提供精细化运营和最优的版本决策；No data , no BB<br>缺点：代码之后需要下线</p>
 </li>
 </ul>
 <h3 id="部署依赖的功能平台"><a href="#部署依赖的功能平台" class="headerlink" title="部署依赖的功能平台"></a>部署依赖的功能平台</h3><p>平台，需要管理云上的机器，和应用服务（容器实例），所以，基于这些功能，就简称他容器云平台好了。部署一个服务，平台最基本需要的功能具体如下：</p>
@@ -634,7 +638,7 @@ Chaos Monkey
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -716,7 +720,7 @@ Chaos Monkey
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
