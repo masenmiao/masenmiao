@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://wewld.com/images/knative-comprelation.png">
 <meta property="og:image" content="https://wewld.com/images/knative-event-comp.png">
 <meta property="og:image" content="https://wewld.com/images/knative-event-real.png">
-<meta property="og:updated_time" content="2020-02-01T10:36:42.755Z">
+<meta property="og:updated_time" content="2020-06-27T04:10:43.741Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Serverless">
 <meta name="twitter:description" content="Serverless定义：表面上的意思是无须关心服务的计算资源，会按照请求量自动伸缩； 实际上，Serverless，最大价值或愿景是 “just to focus on business logic”，真正落地“面向业务”，降低研发门槛和提升效率。 Serverless 和传统云计算的区别：  Decoupling of computation and storage; they scale s">
@@ -361,13 +361,14 @@
 <li>以一致的方式编译和打包代码</li>
 <li>不必每次更新代码时都构建或推送容器镜像</li>
 </ul>
+<p>目前build-pipeline CI/CD已经剥离出knative，形成一个标准化的原生kubernetesCI/CD解决方案 - Tekton；从而让knative专注于serlverLess</p>
 <h4 id="Tekton"><a href="#Tekton" class="headerlink" title="Tekton"></a>Tekton</h4><p>Kubernetes原生CI/CD系统，基于Kubernetes CRD，包括：</p>
 <ul>
-<li>Task：顾名思义，Task表示一个构建任务，Task里可以定义一系列的steps，例如编译代码、构建镜像、推送镜像等，每个step实际由一个Pod执行。</li>
-<li>TaskRun：Task只是定义了一个模版，TaskRun才真正代表了一次实际的运行，当然你也可以自己手动创建一个TaskRun，TaskRun创建出来之后，就会自动触发Task描述的构建任务。</li>
+<li>Task：构建任务，Task里可以定义一系列的steps，例如编译、构建镜像、推送镜像等，每个step实际由一个Pod执行。</li>
+<li>TaskRun：Task只是一个模版，TaskRun代表了一次实际的运行，TaskRun创建出来之后，就会自动触发Task描述的构建任务。</li>
 <li>Pipeline：一个或多个Task、PipelineResource以及各种定义参数的集合。</li>
-<li>PipelineRun：类似Task和TaskRun的关系，pipelineRun也表示某一次实际运行的Pipeline，下发一个pipelineRun CRD实例到Kubernetes后，同样也会触发一次Pipeline的构建。</li>
-<li>PipelineResource：表示pipeline input资源，比如GitHub上的源码，或者pipeline output资源，例如一个容器镜像或者构建生成的jar包等。<br>参考：<a href="https://cloud.tencent.com/developer/article/1538063" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1538063</a></li>
+<li>PipelineRun：pipelineRun也表示某一次实际运行的Pipeline</li>
+<li>PipelineResource：pipeline input,output资源资源，比如GitHub上的源码，一个容器镜像或者构建生成的jar包等。</li>
 </ul>
 <h3 id="Serving（服务）"><a href="#Serving（服务）" class="headerlink" title="Serving（服务）"></a>Serving（服务）</h3><p>在Kubernetes 和 Istio 之上，支持部署无服务应用或方法。</p>
 <p>Knative Serving项目提供的功能包括：</p>
@@ -418,13 +419,18 @@
 <li>对事件消息的抽象，简化了编程难度</li>
 </ul>
 <p>事件的很多概念也来自Spring cloud Stream，Reactive Streams ；<br>因为Spring Cloud就是Pivotal 的出品，Pivotal也是 Knative 主要贡献者之一；<br>另外，过去Spring的成功就是凭借统一的抽象，提供脚手架集成来简化应用开发的代码，接下来，Knative会更抽象，更简化，最终达到应用代码最小化到只和业务相关。</p>
-<p>实践例子</p>
-<ul>
-<li>spring cloud function简化代码，函数式编程</li>
-<li>riff 简化knative的build，及service配置</li>
-</ul>
-<p>参考：<br><a href="https://www.knative.dev/docs/serving/samples/hello-world/helloworld-java/index.html" target="_blank" rel="noopener">https://www.knative.dev/docs/serving/samples/hello-world/helloworld-java/index.html</a><br><a href="https://github.com/bijukunjummen/sample-boot-knative" target="_blank" rel="noopener">https://github.com/bijukunjummen/sample-boot-knative</a></p>
-<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="https://www.knative.dev/docs/" target="_blank" rel="noopener">https://www.knative.dev/docs/</a><br><a href="https://rise.cs.berkeley.edu/blog/a-berkeley-view-on-serverless-computing/" target="_blank" rel="noopener">https://rise.cs.berkeley.edu/blog/a-berkeley-view-on-serverless-computing/</a></p>
+<!--
+完善事件 
+
+实践例子
+- spring cloud function简化代码，函数式编程
+- riff 简化knative的build，及service配置
+
+参考：
+https://www.knative.dev/docs/serving/samples/hello-world/helloworld-java/index.html
+https://github.com/bijukunjummen/sample-boot-knative
+-->
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="https://www.knative.dev/docs/" target="_blank" rel="noopener">https://www.knative.dev/docs/</a><br><a href="https://rise.cs.berkeley.edu/blog/a-berkeley-view-on-serverless-computing/" target="_blank" rel="noopener">https://rise.cs.berkeley.edu/blog/a-berkeley-view-on-serverless-computing/</a><br><a href="https://cloud.tencent.com/developer/article/1538063" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1538063</a></p>
 
       
     </div>
